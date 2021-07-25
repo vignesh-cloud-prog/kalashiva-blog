@@ -1,6 +1,6 @@
 import React from "react";
 import { useState,useEffect } from "react";
-import { auth } from "../firebase";
+import { auth } from "../firebase/firebase";
 import Link from "next/link";
 import AlertMessage from "../components/alerts";
 

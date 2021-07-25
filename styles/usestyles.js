@@ -13,8 +13,20 @@ const useStyles = makeStyles((theme) => ({
   field: {
     marginBottom: 20,
   },
+  md:{
+    margin:theme.spacing(2)
+  },
   alert: {
     width: "100%",
+  },
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9
+  },
+  expand: {
+    
+    marginLeft: 'auto',
+   
   },
 }));
 

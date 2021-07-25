@@ -1,7 +1,8 @@
 import React from "react";
-import { auth } from "../firebase";
+import { auth } from "../firebase/firebase";
 import Link from "next/link";
 import AlertMessage from "./alerts";
+import { useState,useEffect } from "react";
 
 import useStyles from "../styles/usestyles";
 import AppBar from "@material-ui/core/AppBar";
@@ -13,6 +14,17 @@ import MenuIcon from "@material-ui/icons/Menu";
 
 export default function Navbar({ user }) {
   const classes = useStyles();
+
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowMessage(false);
+    }, 5000);
+  }, [showMessage]);
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -31,29 +43,43 @@ export default function Navbar({ user }) {
 
           {user ? (
             <>
-              <Button color="inherit" >
+              <Button color="inherit">
                 <Link href="/createblog">Create BLog</Link>
-                
               </Button>
 
-              <Button color="inherit" onClick={() =>{auth.signOut(); return (<AlertMessage message="Successfully logged out" type="success"/>)}}>
+              <Button
+                color="inherit"
+                onClick={() => {
+                  auth
+                    .signOut()
+                    .then(() => {
+                      setMessage("Log-out Successful");
+                      setSeverity("success");
+                      setShowMessage(true);
+                    })
+                    .catch((error) => {
+                      setMessage(`${error.message} - ${error.code}`);
+                      setSeverity("error");
+                      setShowMessage(true);
+                    });
+                }}
+              >
                 Logout
               </Button>
             </>
           ) : (
             <>
-              <Button color="inherit" >
+              <Button color="inherit">
                 <Link href="/login">Login</Link>
-                
               </Button>
-              <Button color="inherit" >
-                <Link href="/signup">Signup</Link>              
+              <Button color="inherit">
+                <Link href="/signup">Signup</Link>
               </Button>
             </>
           )}
         </Toolbar>
       </AppBar>
-      
+      {showMessage ? <AlertMessage message={message} type={severity} /> : <></>}
     </div>
   );
 }

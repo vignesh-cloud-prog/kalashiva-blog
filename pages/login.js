@@ -1,8 +1,9 @@
 import React from "react";
+ 
 import useStyles from "../styles/usestyles";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
-import { auth } from "../firebase";
+import { auth } from "../firebase/firebase";
 import Link from "next/link";
 import AlertMessage from "../components/alerts";
 
@@ -94,6 +95,7 @@ export default function Login({ children }) {
             </Button>
           </FormControl>
         </form>
+        
         <Typography align="center">
           Don't have an account? <Link href="/signup">Signup</Link>
         </Typography>

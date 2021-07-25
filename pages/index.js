@@ -1,69 +1,76 @@
-import { db } from "../firebase";
+import { db } from "../firebase/firebase";
 import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import Link from "next/link";
+import { Container, Grid, Button, CircularProgress } from "@material-ui/core";
+import BlogCard from "../components/BlogCard";
+import useStyles from "../styles/usestyles";
+import Featured from "../components/featured1";
 
-export default function Home({ allBlogs }) {
-  const [blogs,setBlogs]=useState(allBlogs);
-  const [end,setEnd] = useState(false)
-  const loadMore = async ()=>{
-    const last  = blogs[blogs.length-1]
-    const res = await  db.collection('blogs')
-    .orderBy('createdAt','desc')
-    .startAfter(new Date(last.createdAt))
-    .limit(3)
-    .get()
-    const newblogs = res.docs.map(docSnap=>{
+export default function Home({ allBlogs,featuredBlogs }) {
+  const [load, setLoad] = useState(false);
+  const classes = useStyles();
+  const [blogs, setBlogs] = useState(allBlogs);
+  const [end, setEnd] = useState(false);
+
+  const loadMore = async () => {
+    setLoad(true);
+    const last = blogs[blogs.length - 1];
+    const res = await db
+      .collection("blogs")
+      .orderBy("createdAt", "desc")
+      .startAfter(new Date(last.createdAt))
+      .limit(4)
+      .get();
+    const newblogs = res.docs.map((docSnap) => {
       return {
-       ...docSnap.data(),
-       createdAt:docSnap.data().createdAt.toMillis(),
-       id:docSnap.id
-     }
-    })
-    setBlogs(blogs.concat(newblogs))
+        ...docSnap.data(),
+        createdAt: docSnap.data().createdAt.toMillis(),
+        id: docSnap.id,
+      };
+    });
+    setBlogs(blogs.concat(newblogs));
 
-    if(newblogs.length < 3){
-      setEnd(true)
+    if (newblogs.length < 4) {
+      setEnd(true);
     }
-  }
+    setLoad(false);
+  };
   return (
-    <div className="center">
-      {blogs.map((blog) => {
-        return (
-          <div className="card" key={blog.id}>
-            <div className="card-image">
-              <img src={blog.imageURL} />
-              <span className="card-title">{blog.title}</span>
-            </div>
-            <div className="card-content">
-              <p>{blog.body}</p>
-            </div>
-            <div className="card-action">
-              <Link href={`/blogs/${blog.id}`}>READ MORE</Link>
-            </div>
-          </div>
-        );
-      })
-      }
-      {end==false?
-        <button className="btn #fb8c00 orange darken-1" onClick={()=>loadMore()}>Load more</button>
-         :<h3>You have reached end</h3>
-      }
-      <style jsx>
-        {`
-          .card {
-            max-width: 800px;
-            margin: 22px auto;
-          }
-            p {
-              display: -webkit-box;
-              overflow: hidden;
-              -webkit-line-clamp: 2;
-              -webkit-box-orient: vertical;
-            }
-          }
-        `}
-      </style>
+    <div style={{position:"absolute"}}>
+      {load ? <CircularProgress /> : <></>}
+      <Featured featuredBlogs={featuredBlogs}/>
+      <Container maxWidth="md" alignContent="center">
+        <Grid container spacing={3}>
+          {blogs.map((blog) => (
+            <Grid item xs={12} md={6} lg={4} key={blog.id}>
+              <BlogCard
+                image={blog?.imageURL}
+                title={blog?.title}
+                slug={blog?.slug}
+                desc={blog?.desc}
+                id={blog?.id}
+                catergory={blog?.catergory}
+                createdAt={blog?.createdAt}
+              />
+            </Grid>
+          ))}
+        </Grid>
+
+        {end == false ? (
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            disableElevation
+            onClick={() => loadMore()}
+          >
+            LOAD MORE
+          </Button>
+        ) : (
+          <h3>You have reached end</h3>
+        )}
+      </Container>
     </div>
   );
 }
@@ -74,7 +81,7 @@ export async function getServerSideProps() {
   const querySnap = await db
     .collection("blogs")
     .orderBy("createdAt", "desc")
-    .limit(3)
+    .limit(4)
     .get();
   const allBlogs = querySnap.docs.map((docSnap) => {
     return {
@@ -83,6 +90,19 @@ export async function getServerSideProps() {
       id: docSnap.id,
     };
   });
+
+  const blogSnap = await db
+    .collection("blogs")
+    .where("featured", "==", true)
+    .limit(5)
+    .get();
+  const featuredBlogs = blogSnap.docs.map((docSnap) => {
+    return {
+      ...docSnap.data(),
+      createdAt: docSnap.data().createdAt.toMillis(),
+      id: docSnap.id,
+    };
+  });
   // Pass data to the page via props
-  return { props: { allBlogs } };
+  return { props: { allBlogs,featuredBlogs } };
 }
