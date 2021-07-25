@@ -97,7 +97,7 @@ export default function Login({ children }) {
         </form>
         
         <Typography align="center">
-          Don't have an account? <Link href="/signup">Signup</Link>
+          Don&apos;t have an account&#63;  <Link href="/signup">Signup</Link>
         </Typography>
       </Container>
       {children}
