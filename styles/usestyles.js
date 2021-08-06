@@ -19,14 +19,29 @@ const useStyles = makeStyles((theme) => ({
   alert: {
     width: "100%",
   },
-  media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
-  },
+ 
   expand: {
     
     marginLeft: 'auto',
    
+  },
+  header: {
+    display: "flex",
+    alignItems: "center",
+    height: 50,
+    paddingLeft: theme.spacing(4),
+    backgroundColor: theme.palette.background.default,
+  },
+  img: {
+    height: 255,
+    display: "block",
+    maxWidth: 400,
+    overflow: "hidden",
+    width: "100%",
+  },
+ 
+  media: {
+    height: 140,
   },
 }));
 

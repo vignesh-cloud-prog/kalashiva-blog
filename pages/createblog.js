@@ -15,13 +15,13 @@ import { v4 as uuidv4 } from "uuid";
 import AlertMessage from "../components/alerts";
 import { db, serverTimeStamp, storage } from "../firebase/firebase";
 import useStyles from "../styles/usestyles";
+import Image from "next/image"
 
 export default function CreateBlog({ user }) {
   const classes = useStyles();
 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [slug, setSlug] = useState("");
   const [image, setImage] = useState(null);
   const [url, setUrl] = useState("");
   const [desc, setDesc] = useState("");
@@ -31,6 +31,17 @@ export default function CreateBlog({ user }) {
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+
+  let inputStats={
+    title,body,image,url,desc,category,featured
+  }
+  let inputSetState={
+    setTitle,setBody,setImage,setUrl,setDesc,setCategory,setFeatured
+  }
+
+  let messageState={
+    message,setMessage,severity,setSeverity,showMessage,setShowMessage
+  }
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -44,7 +55,6 @@ export default function CreateBlog({ user }) {
         title,
         body,
         desc,
-        slug,
         catergory: category,
         featured: featured,
         imageURL: url,
@@ -122,16 +132,6 @@ export default function CreateBlog({ user }) {
               onChange={(e) => setTitle(e.target.value)}
             />
 
-            <TextField
-              required
-              className={classes.field}
-              type="text"
-              label="Slug"
-              variant="filled"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-            />
-
             <label htmlFor="upload-photo">
               <input
                 style={{ display: "none" }}
@@ -145,6 +145,7 @@ export default function CreateBlog({ user }) {
                 Add Thumb
               </Button>
             </label>
+            
 
             <TextField
               required
@@ -169,9 +170,9 @@ export default function CreateBlog({ user }) {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <MenuItem value="Story">story</MenuItem>
-                <MenuItem value="Poetry">poetry</MenuItem>
-                <MenuItem value="Novel">novel</MenuItem>
+                <MenuItem value="ಕವಿತೆ">ಕವಿತೆ</MenuItem>
+                <MenuItem value="ಕಥೆ">ಕಥೆ</MenuItem>
+                <MenuItem value="ಲೇಖನ">ಲೇಖನ</MenuItem>
               </Select>
             </FormControl>
 

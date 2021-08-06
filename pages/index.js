@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Container, Grid, Button, CircularProgress } from "@material-ui/core";
 import BlogCard from "../components/BlogCard";
 import useStyles from "../styles/usestyles";
-import Featured from "../components/featured1";
+import Slider from "../components/slider";
+import Tabs from "../components/tabs";
 
 export default function Home({ allBlogs,featuredBlogs }) {
   const [load, setLoad] = useState(false);
@@ -39,7 +40,8 @@ export default function Home({ allBlogs,featuredBlogs }) {
   return (
     <div style={{position:"absolute"}}>
       {load ? <CircularProgress /> : <></>}
-      <Featured featuredBlogs={featuredBlogs}/>
+      <Slider featuredBlogs={featuredBlogs}/>
+      <Tabs></Tabs>
       <Container maxWidth="md" alignContent="center">
         <Grid container spacing={3}>
           {blogs.map((blog) => (

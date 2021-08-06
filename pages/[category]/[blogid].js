@@ -100,7 +100,7 @@ export async function getServerSideProps({ params: { blogid } }) {
       blog: {
         ...result.data(),
         createdAt: result.data().createdAt.toMillis(),
-        id: docSnap.id,
+        
       },
       allComments,
     },

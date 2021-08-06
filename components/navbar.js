@@ -38,7 +38,7 @@ export default function Navbar({ user }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            <Link href="/">Kaalashiva</Link>
+            <Link href="/">ಕಾಲಶಿವ</Link>
           </Typography>
 
           {user ? (

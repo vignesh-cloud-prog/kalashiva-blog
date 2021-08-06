@@ -15,36 +15,12 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import useStyles from "../styles/usestyles";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: 800,
-    flexGrow: 1,
-  },
-  header: {
-    display: "flex",
-    alignItems: "center",
-    height: 50,
-    paddingLeft: theme.spacing(4),
-    backgroundColor: theme.palette.background.default,
-  },
-  img: {
-    height: 255,
-    display: "block",
-    maxWidth: 400,
-    overflow: "hidden",
-    width: "100%",
-  },
- 
-  media: {
-    height: 140,
-  },
-}));
 
-function Featured({ featuredBlogs }) {
-  console.log(featuredBlogs);
+function Slider({ featuredBlogs }) {
   const classes = useStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -63,7 +39,7 @@ function Featured({ featuredBlogs }) {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} >
       {/* <Paper square elevation={0} className={classes.header}>
         <Typography>{featuredBlogs[activeStep]?.title}</Typography>
       </Paper> */}
@@ -77,7 +53,7 @@ function Featured({ featuredBlogs }) {
           <div key={step.label}>
             {Math.abs(activeStep - index) <= 2 ? (
               <div>
-                <Card className={classes.root}>
+                <Card >
                   <CardActionArea>
                     <CardMedia
                       className={classes.media}
@@ -87,15 +63,6 @@ function Featured({ featuredBlogs }) {
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         {step.title}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                      >
-                        Lizards are a widespread group of squamate reptiles,
-                        with over 6,000 species, ranging across all continents
-                        except Antarctica
                       </Typography>
                     </CardContent>
                   </CardActionArea>
@@ -140,4 +107,4 @@ function Featured({ featuredBlogs }) {
   );
 }
 
-export default Featured;
+export default Slider;
