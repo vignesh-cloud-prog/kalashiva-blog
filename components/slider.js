@@ -16,7 +16,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import useStyles from "../styles/usestyles";
-
+import Link from "next/link";
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 
@@ -60,11 +60,15 @@ function Slider({ featuredBlogs }) {
                       image={step.imageURL}
                       title="Contemplative Reptile"
                     />
+                    <Link href={`${step.catergory}/${step.id}`}>
+                    <a >
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         {step.title}
                       </Typography>
                     </CardContent>
+                    </a>
+                    </Link>
                   </CardActionArea>
                   
                 </Card>

@@ -12,17 +12,26 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+
+
+import { EditorState,convertToRaw,convertFromRaw } from "draft-js";
+
 import AlertMessage from "../components/alerts";
 import { db, serverTimeStamp, storage } from "../firebase/firebase";
 import useStyles from "../styles/usestyles";
-import Image from "next/image"
+import Image from "next/image";
+import BlogEditor from "../components/blogEditor";
+
+
 
 export default function CreateBlog({ user }) {
   const classes = useStyles();
 
   const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [image, setImage] = useState(null);
+  const [body, setBody] = useState(() =>
+    EditorState.createEmpty()
+  );
+  const [image, setImage] =useState({ preview: "", raw: null });
   const [url, setUrl] = useState("");
   const [desc, setDesc] = useState("");
   const [category, setCategory] = useState("");
@@ -32,57 +41,66 @@ export default function CreateBlog({ user }) {
   const [severity, setSeverity] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
-  let inputStats={
-    title,body,image,url,desc,category,featured
-  }
-  let inputSetState={
-    setTitle,setBody,setImage,setUrl,setDesc,setCategory,setFeatured
-  }
+  let inputState = {
+    title,
+    body,
+    image,
+    url,
+    desc,
+    category,
+    featured,
+  };
+  let inputSetState = {
+    setTitle,
+    setBody,
+    setImage,
+    setUrl,
+    setDesc,
+    setCategory,
+    setFeatured,
+  };
 
-  let messageState={
-    message,setMessage,severity,setSeverity,showMessage,setShowMessage
-  }
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowMessage(false);
-    }, 5000);
-  }, [showMessage]);
+  let messageState = {
+    message,
+    setMessage,
+    severity,
+    setSeverity,
+    showMessage,
+    setShowMessage,
+  };
 
   useEffect(() => {
     if (url) {
-      let blogdata = {
+      const blogdata = {
         title,
-        body,
+        body:convertToRaw(body.getCurrentContent()),
         desc,
         catergory: category,
         featured: featured,
         imageURL: url,
         postedBy: user?.displayName,
         createdAt: serverTimeStamp(),
-      }
-      
-    
-    db.collection("blogs")
-    .add(blogdata)
-    .then(() => {
-      setMessage(`Blog created`);
-      setSeverity("success");
-      setShowMessage(true);
-    })
-    .catch((error) => {
-      setMessage(error.message);
-      setSeverity("error");
-      setShowMessage(true);
-    });
-      
+      };
+
+      db.collection("blogs")
+        .add(blogdata)
+        .then(() => {
+          setMessage(`Blog created`);
+          setSeverity("success");
+          setShowMessage(true);
+        })
+        .catch((error) => {
+          setMessage(error.message);
+          setSeverity("error");
+          setShowMessage(true);
+        });
     }
   }, [url]);
 
   const submitDetails = (e) => {
     e.preventDefault();
     if (title || body || image || slug) {
-      var uploadTask = storage.ref().child(`images/${uuidv4()}`).put(image);
+      var uploadTask = storage.ref().child(`images/${uuidv4()}`).put(image.raw);
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -114,7 +132,13 @@ export default function CreateBlog({ user }) {
 
   return (
     <div>
-      {showMessage ? <AlertMessage message={message} type={severity} /> : <></>}
+      <BlogEditor
+        inputStats={inputState}
+        inputSetState={inputSetState}
+        messageState={messageState}
+        submitDetails={submitDetails}
+      ></BlogEditor>
+      {/* {showMessage ? <AlertMessage message={message} type={severity} /> : <></>}
 
       <Container maxWidth="sm">
         <Typography variant="h4" component="h1">
@@ -204,7 +228,7 @@ export default function CreateBlog({ user }) {
             </Button>
           </FormControl>
         </form>
-      </Container>
+      </Container> */}
     </div>
   );
 }

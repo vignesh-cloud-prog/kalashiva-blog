@@ -42,7 +42,7 @@ export default function Home({ allBlogs,featuredBlogs }) {
       {load ? <CircularProgress /> : <></>}
       <Slider featuredBlogs={featuredBlogs}/>
       <Tabs></Tabs>
-      <Container maxWidth="md" alignContent="center">
+      <Container maxWidth="md">
         <Grid container spacing={3}>
           {blogs.map((blog) => (
             <Grid item xs={12} md={6} lg={4} key={blog.id}>
