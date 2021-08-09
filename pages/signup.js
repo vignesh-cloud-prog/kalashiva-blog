@@ -1,7 +1,13 @@
 import React from "react";
 import { useState,useEffect } from "react";
+
+import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
+
 import Link from "next/link";
+import { useRouter } from "next/router";
+import Head from "next/dist/next-server/lib/head";
+
 import AlertMessage from "../components/alerts";
 
 import useStyles from "../styles/usestyles";
@@ -15,8 +21,10 @@ import {
   Container,
   Typography,
 } from "@material-ui/core";
+import OAuth from "../components/oAuth";
 
 export default function Signup() {
+ 
   const classes = useStyles();
   const [name, setName] = useState(``);
   const [email, setEmail] = useState(``);
@@ -27,11 +35,17 @@ export default function Signup() {
   const [severity, setSeverity] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowMessage(false);
-    }, 5000);
-  }, [showMessage]);
+  const [user, loading, error] = useAuthState(auth);
+  const router = useRouter();
+
+  // if (loading) return <Loading />
+  if (loading) return <h1>Loading</h1>;
+  // else if (error) return <Error msg={error} />
+  else if (error) return <h1>{error}</h1>;
+  else if (user) {
+    // user is already logged in, redirect to home page
+    router.push("/");
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,6 +65,9 @@ export default function Signup() {
   };
   return (
     <div>
+        <Head>
+        <title>Kaalashiva | LogIn</title>
+      </Head>
       {showMessage ? <AlertMessage message={message} type={severity} /> : <></>}
       <Container maxWidth="sm">
         <Typography variant="h4" align="center" component="h1">
@@ -106,6 +123,8 @@ export default function Signup() {
         <Typography align="center">
           <Link href="/login">Already have an account&#63;  Login</Link>
         </Typography>
+        <Typography>or</Typography>
+        <OAuth/>
       </Container>
     </div>
   );

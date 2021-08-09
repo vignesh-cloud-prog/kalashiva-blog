@@ -1,12 +1,24 @@
-import React from "react";
- 
+// Next JS related
+import Head from "next/head";
+import { useRouter } from "next/router";
+import Link from "next/link";
+
+// Firebase related
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase";
+
+// Components
+import AlertMessage from "../components/alerts";
+import OAuth from "../components/oAuth";
+
+// Styles
 import useStyles from "../styles/usestyles";
 import clsx from "clsx";
-import { useState, useEffect } from "react";
-import { auth } from "../firebase/firebase";
-import Link from "next/link";
-import AlertMessage from "../components/alerts";
 
+// React
+import { useState, useEffect } from "react";
+
+// Material ui Componenets
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import {
   Button,
@@ -29,11 +41,17 @@ export default function Login({ children }) {
   const [severity, setSeverity] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowMessage(false);
-    }, 5000);
-  }, [showMessage]);
+  const [user, loading, error] = useAuthState(auth);
+  const router = useRouter();
+
+  // if (loading) return <Loading />
+  if (loading) return <h1>Loading</h1>;
+  // else if (error) return <Error msg={error} />
+  else if (error) return <h1>{error}</h1>;
+  else if (user) {
+    // user is already logged in, redirect to home page
+    router.push("/");
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,15 +65,20 @@ export default function Login({ children }) {
       setSeverity("error");
       setShowMessage(true);
     }
-    console.log(email, password);
+    
   };
+
+  
   return (
     <div>
+      <Head>
+        <title>Kaalashiva | LogIn</title>
+      </Head>
       {showMessage ? <AlertMessage message={message} type={severity} /> : <></>}
       <Container maxWidth="sm">
-        <Typography variant="h4" align="center" component="h1">
-          Login
-        </Typography>
+        <div>
+          <h1>Kalashiva - Login</h1>
+        </div>
         <form onSubmit={(e) => handleSubmit(e)}>
           <FormControl noValidate fullWidth>
             <TextField
@@ -95,10 +118,12 @@ export default function Login({ children }) {
             </Button>
           </FormControl>
         </form>
-        
+
         <Typography align="center">
-          Don&apos;t have an account&#63;  <Link href="/signup">Signup</Link>
+          Don&apos;t have an account&#63; <Link href="/signup">Signup</Link>
         </Typography>
+        <Typography>or</Typography>
+        <OAuth/>
       </Container>
       {children}
     </div>

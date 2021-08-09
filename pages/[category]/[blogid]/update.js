@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 export default function UpdateBlog({ blogid }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState(() => EditorState.createEmpty());
-  const [image, setImage] = useState({ preview: "", raw: null });
+  const [image, setImage] = useState({ preview: "", raw: "" });
   const [url, setUrl] = useState("");
   const [desc, setDesc] = useState("");
   const [category, setCategory] = useState("");
@@ -18,13 +18,13 @@ export default function UpdateBlog({ blogid }) {
   const [severity, setSeverity] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
+  const [updateBlogState, setupdateBlogState] = useState(false);
   const blog = async () => {
     const cityRef = db.collection("blogs").doc(blogid);
     const doc = await cityRef.get();
     if (!doc.exists) {
       console.log("No such document!");
     } else {
-      console.log("Document data:", doc.data());
       const blogData = doc.data();
 
       setTitle(blogData.title);
@@ -33,9 +33,8 @@ export default function UpdateBlog({ blogid }) {
       setCategory(blogData.catergory);
       setFeatured(blogData.featured);
       setImage({
-        preview:blogData.imageURL  
+        preview: blogData.imageURL,
       });
-      console.log(blogData.imageURL);
     }
   };
 
@@ -69,23 +68,17 @@ export default function UpdateBlog({ blogid }) {
     showMessage,
     setShowMessage,
   };
-
+  let blogfields = {
+    title,
+    body: convertToRaw(body.getCurrentContent()),
+    desc,
+    catergory: category,
+    featured: featured,
+    imageURL: image.preview,
+  };
   const updateBlog = async () => {
     try {
-      await db
-        .collection("blogs")
-        .doc(blogid)
-        .set(
-          {
-            title,
-            body: convertToRaw(body.getCurrentContent()),
-            desc,
-            catergory: category,
-            featured: featured,
-            imageURL: url,
-          },
-          { merge: true }
-        );
+      await db.collection("blogs").doc(blogid).set(blogfields, { merge: true });
 
       setMessage(`Blog updated successfully`);
       setSeverity("success");
@@ -100,36 +93,63 @@ export default function UpdateBlog({ blogid }) {
 
   useEffect(() => {
     if (url) {
-      updateBlog();
+      blogfields.imageURL = url;
     }
-  }, [url]);
+    if (updateBlogState) {
+      updateBlog();
+      setupdateBlogState(false);
+    }
+  }, [updateBlogState, url]);
 
   const submitDetails = (e) => {
     e.preventDefault();
-    if (title || body || image || slug) {
-      var uploadTask = storage.ref().child(`images/${uuidv4()}`).put(image.raw);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          var progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          if (progress == 100) setMessage(`Image uploaded`);
-          setSeverity("success");
-          setShowMessage(true);
-        },
-        (error) => {
-          setMessage(error.message);
-          setSeverity("error");
-          setShowMessage(true);
-        },
-        () => {
-          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            console.log("File available at", downloadURL);
-            setUrl(downloadURL);
-          });
-        }
-      );
+
+    if (title || body || slug) {
+      if (image.raw) {
+        var uploadTask = storage
+          .ref()
+          .child(`images/${uuidv4()}`)
+          .put(image.raw);
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            var progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            if (progress == 100) setMessage(`Image uploaded`);
+            setSeverity("success");
+            setShowMessage(true);
+          },
+          (error) => {
+            setMessage(error.message);
+            setSeverity("error");
+            setShowMessage(true);
+            // A full list of error codes is available at
+            // https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+              case "storage/unauthorized":
+                // User doesn't have permission to access the object
+                break;
+              case "storage/canceled":
+                // User canceled the upload
+                break;
+
+              // ...
+
+              case "storage/unknown":
+                // Unknown error occurred, inspect error.serverResponse
+                break;
+            }
+          },
+          () => {
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+              setUrl(downloadURL);
+            });
+          }
+        );
+      }
+      setupdateBlogState(true);
     } else {
       setMessage("Please enter all the fields");
       setSeverity("warning");
@@ -150,7 +170,6 @@ export default function UpdateBlog({ blogid }) {
 }
 
 export async function getServerSideProps({ params: { blogid } }) {
-  console.log("props" + blogid);
   // Create a reference to the blogsF collection
 
   return {
