@@ -15,6 +15,14 @@ import { Avatar, Badge, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
 
 export default function Navbar({ user }) {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+=======
+  console.log(user);
+>>>>>>> 9b9be2ed83286c9bf263454ec9ac45a0c0314a4f
+>>>>>>> 03a08b93be93ada7b36d691156d068c96bc0c1c0
   const classes = navStyles();
 
   const [message, setMessage] = useState("");
