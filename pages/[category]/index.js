@@ -1,8 +1,4 @@
-<<<<<<< HEAD:pages/[category]/index.js
 import { Container, Grid } from "@material-ui/core";
-=======
-import { Container,Grid } from "@material-ui/core";
->>>>>>> 9b9be2ed83286c9bf263454ec9ac45a0c0314a4f:pages/[category].js
 import BlogCard from "../../components/Blog/BlogCard";
 import React from "react";
 import { db } from "../../firebase/firebase";
