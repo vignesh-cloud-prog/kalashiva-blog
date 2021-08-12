@@ -15,13 +15,13 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import useStyles from "../styles/usestyles";
+import sliderStyles from "../../styles/sliderStyles";
 import Link from "next/link";
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 
 function Slider({ featuredBlogs }) {
-  const classes = useStyles();
+  const classes = sliderStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = featuredBlogs.length;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { async } from "regenerator-runtime";
-import BlogEditor from "../../../components/blogEditor";
+import BlogEditor from "../../../components/Blog/blogEditor";
 import { db, serverTimeStamp, storage } from "../../../firebase/firebase";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { v4 as uuidv4 } from "uuid";

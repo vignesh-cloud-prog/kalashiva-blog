@@ -14,10 +14,16 @@ import ShareIcon from "@material-ui/icons/Share";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import CommentIcon from "@material-ui/icons/Comment";
 import Link from "next/link";
-import useStyles from "../styles/usestyles";
+import useStyles from "../../styles/usestyles";
 import ReactTimeAgo from "react-time-ago";
-import { Button } from "@material-ui/core";
-import { Category } from "@material-ui/icons";
+import { Button, Grid } from "@material-ui/core";
+import {
+  BookmarkBorderOutlined,
+  Category,
+  LibraryAddCheckOutlined,
+  LibraryAddOutlined,
+  ShareOutlined,
+} from "@material-ui/icons";
 
 export default function BlogCard({
   id,
@@ -36,20 +42,27 @@ export default function BlogCard({
   };
 
   return (
-    <Card className={classes.root} raised>
+    <Card className={classes.card_container} raised>
       <CardHeader
         title={
           <>
-            {title}
-            <Button
-              className={classes.md}
-              variant="contained"
-              color="secondary"
-              edge="end"
-
-            >
-              {catergory}
-            </Button>
+            <Grid container>
+              <Grid item xs={9}>
+                <Typography>{title}</Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Grid container justifyContent="flex-end">
+                  <Button
+                    className={classes.label}
+                    variant="contained"
+                    color="secondary"
+                    edge="end"
+                  >
+                    {catergory}
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
           </>
         }
         subheader={<ReactTimeAgo date={createdAt} locale="en-US" />}
@@ -58,29 +71,25 @@ export default function BlogCard({
       <CardMedia className={classes.media} image={image} />
 
       <Link href={`/${catergory}/${id}`}>
-            <a>
-          
-        <CardContent >
-          <Typography variant="body2" color="textSecondary" component="p">
-            {desc} <Typography variant="body2">Read more</Typography>
-          </Typography>
-        </CardContent>
+        <a>
+          <CardContent>
+            <Typography noWrap variant="body2" color="textSecondary" component="p">
+              {desc} <Typography variant="body2">Read more</Typography>
+            </Typography>
+          </CardContent>
         </a>
       </Link>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
-          <ThumbUpAltIcon />
+          <BookmarkBorderOutlined />
         </IconButton>
         <IconButton aria-label="share">
-          <CommentIcon />
+          <LibraryAddOutlined />
         </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
+
+        <IconButton aria-label="share" className={classes.expand}>
+          <ShareOutlined />
         </IconButton>
-        <IconButton aria-label="share"></IconButton>
-        <Typography className={classes.expand} variant="h6">
-          {`200 views`}
-        </Typography>
       </CardActions>
     </Card>
   );

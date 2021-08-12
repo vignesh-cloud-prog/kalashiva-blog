@@ -1,17 +1,16 @@
-import { Container,Grid } from "@material-ui/core";
-import BlogCard from "../components/BlogCard";
+import { Container, Grid } from "@material-ui/core";
+import BlogCard from "../../components/Blog/BlogCard";
 import React from "react";
-import { db } from "../firebase/firebase";
+import { db } from "../../firebase/firebase";
 
-export default function Categories({blogs,category}) {
-    console.log(blogs,category);
+export default function Categories({ blogs, category }) {
   return (
     <div>
       <h1>{`${category}`}</h1>
       <Container maxWidth="md">
         <Grid container spacing={3}>
           {blogs.map((blog) => (
-            <Grid item xs={12} md={6} lg={4} key={blog.id}>
+            <Grid item xs={12} md={6} lg={3} key={blog.id}>
               <BlogCard
                 image={blog?.imageURL}
                 title={blog?.title}
@@ -24,13 +23,12 @@ export default function Categories({blogs,category}) {
             </Grid>
           ))}
         </Grid>
-        </Container>
+      </Container>
     </div>
   );
 }
 
 export async function getServerSideProps({ params: { category } }) {
-  console.log("props" + category);
   // Create a reference to the blogsF collection
   const allBlogs = db.collection("blogs");
 
@@ -47,6 +45,6 @@ export async function getServerSideProps({ params: { category } }) {
   });
 
   return {
-    props: { blogs,category }, // will be passed to the page component as props
+    props: { blogs, category }, // will be passed to the page component as props
   };
 }

@@ -1,27 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  field: {
-    marginBottom: 20,
-  },
-  alert: {
-    width: "100%",
-  },
- 
-  expand: {
-    
-    marginLeft: 'auto',
-   
-  },
+const homeStyles = makeStyles((theme) => ({
+
   header: {
     display: "flex",
     alignItems: "center",
@@ -40,6 +20,10 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: 140,
   },
+  wrapper: {
+    marginTop: theme.spacing(2),
+    position: 'relative',
+  },
 }));
 
-export default useStyles;
+export default homeStyles;

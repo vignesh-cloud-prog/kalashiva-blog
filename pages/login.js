@@ -8,7 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
 
 // Components
-import AlertMessage from "../components/alerts";
+import Alerts from "../components/Main/alerts";
 import OAuth from "../components/oAuth";
 
 // Styles
@@ -74,7 +74,7 @@ export default function Login({ children }) {
       <Head>
         <title>Kaalashiva | LogIn</title>
       </Head>
-      {showMessage ? <AlertMessage message={message} type={severity} /> : <></>}
+      {showMessage ? <Alerts message={message} type={severity} /> : <></>}
       <Container maxWidth="sm">
         <div>
           <h1>Kalashiva - Login</h1>

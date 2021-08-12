@@ -1,26 +1,9 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const sliderStyles = makeStyles((theme) => ({
   root: {
+    marginTop:theme.spacing(2),
     flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  field: {
-    marginBottom: 20,
-  },
-  alert: {
-    width: "100%",
-  },
- 
-  expand: {
-    
-    marginLeft: 'auto',
-   
   },
   header: {
     display: "flex",
@@ -42,4 +25,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default useStyles;
+export default sliderStyles;

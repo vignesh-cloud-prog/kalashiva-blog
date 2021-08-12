@@ -1,37 +1,16 @@
-import {
-  Button,
-  Container,
-  FormControl,
-  TextField,
-  Typography,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormControlLabel,
-  Switch,
-} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-
-
-import { EditorState,convertToRaw,convertFromRaw } from "draft-js";
-
-import AlertMessage from "../components/alerts";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { db, serverTimeStamp, storage } from "../firebase/firebase";
 import useStyles from "../styles/usestyles";
-import Image from "next/image";
-import BlogEditor from "../components/blogEditor";
-
-
+import BlogEditor from "../components/Blog/blogEditor";
 
 export default function CreateBlog({ user }) {
   const classes = useStyles();
 
   const [title, setTitle] = useState("");
-  const [body, setBody] = useState(() =>
-    EditorState.createEmpty()
-  );
-  const [image, setImage] =useState({ preview: "", raw: null });
+  const [body, setBody] = useState(() => EditorState.createEmpty());
+  const [image, setImage] = useState({ preview: "", raw: null });
   const [url, setUrl] = useState("");
   const [desc, setDesc] = useState("");
   const [category, setCategory] = useState("");
@@ -73,7 +52,7 @@ export default function CreateBlog({ user }) {
     if (url) {
       const blogdata = {
         title,
-        body:convertToRaw(body.getCurrentContent()),
+        body: convertToRaw(body.getCurrentContent()),
         desc,
         catergory: category,
         featured: featured,
@@ -138,97 +117,6 @@ export default function CreateBlog({ user }) {
         messageState={messageState}
         submitDetails={submitDetails}
       ></BlogEditor>
-      {/* {showMessage ? <AlertMessage message={message} type={severity} /> : <></>}
-
-      <Container maxWidth="sm">
-        <Typography variant="h4" component="h1">
-          Add Blog
-        </Typography>
-        <form onSubmit={(e) => submitDetails(e)}>
-          <FormControl noValidate fullWidth>
-            <TextField
-              required
-              className={classes.field}
-              type="text"
-              label="Title"
-              variant="filled"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-
-            <label htmlFor="upload-photo">
-              <input
-                style={{ display: "none" }}
-                id="upload-photo"
-                name="upload-photo"
-                type="file"
-                onChange={(e) => setImage(e.target.files[0])}
-              />
-
-              <Button color="secondary" variant="contained" component="span">
-                Add Thumb
-              </Button>
-            </label>
-            
-
-            <TextField
-              required
-              className={classes.field}
-              multiline
-              rows={2}
-              maxRows={4}
-              label="Description"
-              variant="filled"
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-            />
-            <FormControl variant="filled">
-              <InputLabel id="cate" required>
-                Category
-              </InputLabel>
-
-              <Select
-                label="Category"
-                labelId="cate"
-                id="demo-simple-select"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <MenuItem value="ಕವಿತೆ">ಕವಿತೆ</MenuItem>
-                <MenuItem value="ಕಥೆ">ಕಥೆ</MenuItem>
-                <MenuItem value="ಲೇಖನ">ಲೇಖನ</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControlLabel
-              control={
-                <Switch
-                  color="primary"
-                  value={featured}
-                  onChange={() => setFeatured(true)}
-                />
-              }
-              label="featured"
-              labelPlacement="start"
-            />
-            <TextField
-              required
-              className={classes.field}
-              multiline
-              rows={5}
-              maxRows={12}
-              label="Body"
-              variant="filled"
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-            />
-
-            <Button variant="contained" color="primary" type="submit">
-              create blog
-            </Button>
-          </FormControl>
-        </form>
-      </Container> */}
     </div>
   );
 }
