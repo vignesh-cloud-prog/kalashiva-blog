@@ -15,7 +15,6 @@ import { Avatar, Badge, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
 
 export default function Navbar({ user }) {
-
   const classes = navStyles();
 
   const [message, setMessage] = useState("");
