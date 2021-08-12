@@ -14,7 +14,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import CommentIcon from "@material-ui/icons/Comment";
 import Link from "next/link";
-import useStyles from "../styles/usestyles";
+import useStyles from "../../styles/usestyles";
 import ReactTimeAgo from "react-time-ago";
 import { Button } from "@material-ui/core";
 import { Category } from "@material-ui/icons";

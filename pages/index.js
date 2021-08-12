@@ -3,14 +3,15 @@ import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import Link from "next/link";
 import { Container, Grid, Button, CircularProgress } from "@material-ui/core";
-import BlogCard from "../components/BlogCard";
-import useStyles from "../styles/usestyles";
-import Slider from "../components/slider";
-import Tabs from "../components/tabs";
+import BlogCard from "../components/Blog/BlogCard";
+import homeStyles from "../styles/homeStyles";
+import Slider from "../components/Blog/slider";
+import HomeTabs from "../components/Main/tabs";
+import Main from "../components/layout/mainLayout";
 
 export default function Home({ allBlogs,featuredBlogs }) {
   const [load, setLoad] = useState(false);
-  const classes = useStyles();
+  const classes = homeStyles();
   const [blogs, setBlogs] = useState(allBlogs);
   const [end, setEnd] = useState(false);
 
@@ -38,11 +39,12 @@ export default function Home({ allBlogs,featuredBlogs }) {
     setLoad(false);
   };
   return (
-    <div style={{position:"absolute"}}>
+    <Container>
+      <Main featuredBlogs={featuredBlogs}>
+    <div >
       {load ? <CircularProgress /> : <></>}
-      <Slider featuredBlogs={featuredBlogs}/>
-      <Tabs></Tabs>
-      <Container maxWidth="md">
+      {/* <Slider featuredBlogs={featuredBlogs}/>
+      <HomeTabs /> */}
         <Grid container spacing={3}>
           {blogs.map((blog) => (
             <Grid item xs={12} md={6} lg={4} key={blog.id}>
@@ -72,8 +74,10 @@ export default function Home({ allBlogs,featuredBlogs }) {
         ) : (
           <h3>You have reached end</h3>
         )}
-      </Container>
+     
     </div>
+    </Main>
+    </Container>
   );
 }
 

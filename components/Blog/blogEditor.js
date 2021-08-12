@@ -12,8 +12,8 @@ import {
 } from "@material-ui/core";
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
-import AlertMessage from "../components/alerts";
-import useStyles from "../styles/usestyles";
+import Alerts from "../Main/alerts"
+import useStyles from "../../styles/usestyles";
 import Image from "next/dist/client/image";
 
 const Editor = dynamic(
@@ -62,10 +62,10 @@ export default function BlogEditor({
 
   return (
     <div>
-      {showMessage ? <AlertMessage message={message} type={severity} /> : <></>}
+      {showMessage ? <Alerts message={message} type={severity} /> : <></>}
 
-      <Container maxWidth="sm">
-        <Typography variant="h4" component="h1">
+      <Container>
+        <Typography variant="h4" component="h1" >
           Add Blog
         </Typography>
         <form onSubmit={(e) => submitDetails(e)}>

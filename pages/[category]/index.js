@@ -1,7 +1,7 @@
 import { Container,Grid } from "@material-ui/core";
-import BlogCard from "../components/BlogCard";
+import BlogCard from "../../components/Blog/BlogCard";
 import React from "react";
-import { db } from "../firebase/firebase";
+import { db } from "../../firebase/firebase";
 
 export default function Categories({blogs,category}) {
     console.log(blogs,category);

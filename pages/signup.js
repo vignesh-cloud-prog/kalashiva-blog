@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/dist/next-server/lib/head";
 
-import AlertMessage from "../components/alerts";
+import Alerts from "../components/Main/alerts";
 
 import useStyles from "../styles/usestyles";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
@@ -68,7 +68,7 @@ export default function Signup() {
         <Head>
         <title>Kaalashiva | LogIn</title>
       </Head>
-      {showMessage ? <AlertMessage message={message} type={severity} /> : <></>}
+      {showMessage ? <Alerts message={message} type={severity} /> : <></>}
       <Container maxWidth="sm">
         <Typography variant="h4" align="center" component="h1">
           Signup
