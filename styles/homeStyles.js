@@ -20,10 +20,13 @@ const homeStyles = makeStyles((theme) => ({
   media: {
     height: 140,
   },
+<<<<<<< HEAD
   wrapper: {
     marginTop: theme.spacing(2),
     position: 'relative',
   },
+=======
+>>>>>>> 9b9be2ed83286c9bf263454ec9ac45a0c0314a4f
 }));
 
 export default homeStyles;
