@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import Head from "next/dist/next-server/lib/head";
+import Head from 'next/head'
 import Navbar from "../components/layout/navbar"
 import { auth } from "../firebase/firebase";
 import { useEffect, useState } from "react";
