@@ -1,6 +1,5 @@
 # kaalashiva Blog
-
-<iframe src="https://kaalashiva.vercel.app/" title="Kaalashiva Live" style="height:200px;width:100%;"></iframe>
+[Visit Kaalashiva Blog](https://kaalashiva.vercel.app/ "kaalashiva")
 
 ## Getting Started
 
