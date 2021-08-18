@@ -6,7 +6,7 @@ import { auth } from "../firebase/firebase";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Head from "next/dist/next-server/lib/head";
+import Head from "next/head";
 
 import Alerts from "../components/Main/alerts";
 
