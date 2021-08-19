@@ -13,6 +13,7 @@ TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
 
 function MyApp({ Component, pageProps }) {
+  console.log(process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
   const [user, setUser] = useState(null);
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
