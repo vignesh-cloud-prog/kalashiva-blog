@@ -3,7 +3,7 @@ import Share from "../components/Main/share";
 import Navbar from "../components/layout/navbar";
 import { auth } from "../firebase/firebase";
 import { useEffect, useState } from "react";
-
+import Head from "next/head";
 // import TimeAgo from "javascript-time-ago";
 
 // import en from "javascript-time-ago/locale/en";
@@ -23,6 +23,19 @@ function MyApp({ Component, pageProps }) {
   }, []);
   return (
     <>
+      <Head>
+        <title>kaalashiva</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="author" content="Vijay viji kaalashiva" />
+        <meta
+          name="description"
+          content="Kaalashiva is kannada blogging website. You can read beautiful stories, novel and articles."
+        />
+        <meta
+          name="keywords"
+          content="kannada, kaalashiva, blog, story, article"
+        />
+      </Head>
       <Navbar user={user} />
       <Component {...pageProps} user={user} />
       <Share />

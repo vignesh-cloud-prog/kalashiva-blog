@@ -1,4 +1,5 @@
 import React from "react";
+import Head from 'next/head'
 import dynamic from "next/dynamic";
 import { db, serverTimeStamp } from "../../../firebase/firebase";
 import { useEffect, useState } from "react";
@@ -70,10 +71,15 @@ export default function BlogDetails({ blog, user, allComments }) {
 
   return (
     <Container>
+      <Head>
+        <title>{`${blog.title} | kaalashiva`}</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="description" content={`${blog.desc}`}/>
+      </Head>
       {showMessage ? <Alerts message={message} type={severity} /> : <></>}
       <h1>{blog.title}</h1>
       <h5>created on - {new Date(blog.createdAt).toDateString()}</h5>
-      <Image width="800" height="90" src={blog.imageURL} alt="image" />
+      <Image width="90vw" height="3ovh" layout="responsive" src={blog.imageURL} alt="image" />
       <Editor
         editorState={content}
         readOnly={true}

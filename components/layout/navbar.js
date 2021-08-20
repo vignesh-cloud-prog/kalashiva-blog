@@ -36,7 +36,7 @@ export default function Navbar({ user }) {
 
   return (
     <div className={navClass.nav}>
-      <AppBar position="fixed">
+      <AppBar position="static">
         <Toolbar>
           <Avatar
             alt="Kaalashiva"

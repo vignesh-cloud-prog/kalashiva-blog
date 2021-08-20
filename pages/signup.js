@@ -1,16 +1,22 @@
+// React components
 import React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 
+// Firebase auth components
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
 
+// Next components
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import Image from "next/image";
 
+// Componetnts
 import Alerts from "../components/Main/alerts";
 
-import useStyles from "../styles/usestyles";
+// Material ui components
+import SignupStyle from "../styles/signupStyles";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import {
   Button,
@@ -24,8 +30,7 @@ import {
 import OAuth from "../components/oAuth";
 
 export default function Signup() {
- 
-  const classes = useStyles();
+  const classes = SignupStyle();
   const [name, setName] = useState(``);
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
@@ -65,66 +70,85 @@ export default function Signup() {
   };
   return (
     <div>
-        <Head>
-        <title>Kaalashiva | LogIn</title>
+      <Head>
+        <title>Kaalashiva - Signup</title>
+        <meta
+          name="description"
+          content="Signup to kaalashiva, kannada blogs website"
+        />
       </Head>
       {showMessage ? <Alerts message={message} type={severity} /> : <></>}
       <Container maxWidth="sm">
-        <Typography variant="h4" align="center" component="h1">
-          Signup
-        </Typography>
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <FormControl noValidate fullWidth>
-            <TextField
-              className={classes.field}
-              type="text"
-              label="Name"
-              variant="outlined"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+        <Container maxWidth="sm" className={classes.padd}>
+          <div className={classes.mb}>
+            <Image
+              src="/kaalashiva.jpg"
+              layout="responsive"
+              height="30vh"
+              width="80vw"
+              alt="kaalashiva-icon"
             />
-            <TextField
-              className={classes.field}
-              type="email"
-              label="Email"
-              variant="outlined"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <Typography
+              variant="h5"
+              align="center"
+              variantMapping={{ h1: "h1" }}
+            >
+              Kalashiva - Signup
+            </Typography>
+          </div>
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <FormControl noValidate fullWidth>
+              <TextField
+                className={classes.field}
+                type="text"
+                label="Name"
+                variant="outlined"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <TextField
+                className={classes.field}
+                type="email"
+                label="Email"
+                variant="outlined"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-            <TextField
-              className={classes.field}
-              type={showPassword ? "text" : "password"}
-              label="Password"
-              variant="outlined"
-              placeholder="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
+              <TextField
+                className={classes.field}
+                type={showPassword ? "text" : "password"}
+                label="Password"
+                variant="outlined"
+                placeholder="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-            <Button variant="contained" color="primary" type="submit">
-              Signup
-            </Button>
-          </FormControl>
-        </form>
-        <Typography align="center">
-          <Link href="login">Already have an account&#63;  Login</Link>
-        </Typography>
-        <Typography>or</Typography>
-        <OAuth/>
+              <Button variant="contained" color="primary" type="submit">
+                Signup
+              </Button>
+            </FormControl>
+          </form>
+          <Typography align="center">
+            <Link href="login">Already have an account&#63; Login</Link>
+          </Typography>
+        </Container>
+        <Typography align="center">or</Typography>
+        <OAuth />
       </Container>
     </div>
   );
