@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-import { db, serverTimeStamp, storage } from "../firebase/firebase";
-import useStyles from "../styles/usestyles";
-import BlogEditor from "../components/Blog/blogEditor";
+import { db, serverTimeStamp, storage } from "../../firebase/firebase";
+import useStyles from "../../styles/usestyles";
+import BlogEditor from "../../components/Blog/blogEditor";
 
 export default function CreateBlog({ user }) {
   const classes = useStyles();
@@ -15,6 +15,7 @@ export default function CreateBlog({ user }) {
   const [desc, setDesc] = useState("");
   const [category, setCategory] = useState("");
   const [featured, setFeatured] = useState(false);
+  const [published, setPublished] = useState(false);
 
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("");
@@ -28,6 +29,7 @@ export default function CreateBlog({ user }) {
     desc,
     category,
     featured,
+    published,
   };
   let inputSetState = {
     setTitle,
@@ -37,6 +39,7 @@ export default function CreateBlog({ user }) {
     setDesc,
     setCategory,
     setFeatured,
+    setPublished,
   };
 
   let messageState = {
@@ -56,6 +59,7 @@ export default function CreateBlog({ user }) {
         desc,
         catergory: category,
         featured: featured,
+        published:published,
         imageURL: url,
         postedBy: user?.displayName,
         createdAt: serverTimeStamp(),

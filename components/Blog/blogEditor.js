@@ -39,7 +39,7 @@ export default function BlogEditor({
     setSeverity,
     setMessage,
   } = messageState;
-  const { featured, category, desc, url, image, body, title } = inputStats;
+  const { featured, category, desc, url, image, body, title,published } = inputStats;
   const {
     setTitle,
     setBody,
@@ -48,6 +48,7 @@ export default function BlogEditor({
     setDesc,
     setCategory,
     setFeatured,
+    setPublished,
   } = inputSetState;
 
   useEffect(() => {
@@ -56,15 +57,12 @@ export default function BlogEditor({
     }, 5000);
   }, [showMessage]);
 
-  const myLoader = ({ src, width, quality }) => {
-    return `https://example.com/${src}?w=${width}&q=${quality || 75}`
-  }
 
   return (
     <div>
       {showMessage ? <Alerts message={message} type={severity} /> : <></>}
 
-      <Container>
+      <Container width="md">
         <Typography variant="h4" component="h1" >
           Add Blog
         </Typography>
@@ -146,7 +144,18 @@ export default function BlogEditor({
               }}
             >
               <Editor editorState={body} onEditorStateChange={setBody} />
-            </div>{" "}
+            </div>
+            <FormControlLabel
+              control={
+                <Switch
+                  color="primary"
+                  value={published}
+                  onChange={() => setPublished(true)}
+                />
+              }
+              label="Is it ready to publish"
+              labelPlacement="start"
+            />
             <Button variant="contained" color="primary" type="submit">
               create blog
             </Button>

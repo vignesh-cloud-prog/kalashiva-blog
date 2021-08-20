@@ -1,6 +1,4 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -8,26 +6,25 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
-import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
-import ShareIcon from "@material-ui/icons/Share";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import CommentIcon from "@material-ui/icons/Comment";
 import Link from "next/link";
 import useStyles from "../../styles/usestyles";
 import ReactTimeAgo from "react-time-ago";
+import TimeAgo from "javascript-time-ago";
+
+import en from "javascript-time-ago/locale/en";
+import ru from "javascript-time-ago/locale/ru";
+
+TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(ru);
 import { Button, Grid } from "@material-ui/core";
 import {
   BookmarkBorderOutlined,
-  Category,
-  LibraryAddCheckOutlined,
   LibraryAddOutlined,
   ShareOutlined,
 } from "@material-ui/icons";
 
 export default function BlogCard({
   id,
-  slug,
   title,
   desc,
   createdAt,

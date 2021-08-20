@@ -12,9 +12,11 @@ const Editor = dynamic(
   }
 );
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import EditIcon from '@material-ui/icons/Edit';
 import {
   Avatar,
   Container,
+  Fab,
   Grid,
   IconButton,
   InputAdornment,
@@ -27,10 +29,12 @@ import Link from "next/link";
 import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
 
 export default function BlogDetails({ blog, user, allComments }) {
+  let userEmail;
+  if (user != null) userEmail = user["email"];
   const toolStyle = { display: "none" };
   const [comment, setComment] = useState("");
   const [comments, setAllComments] = useState(allComments);
-  const { title, body, imgURL, createdAt, desc, category } = blog;
+ 
 
   const contentState = convertFromRaw(blog.body);
   const content = EditorState.createWithContent(contentState);
@@ -40,7 +44,7 @@ export default function BlogDetails({ blog, user, allComments }) {
   const [showMessage, setShowMessage] = useState(false);
 
   const router = useRouter();
-  const { blogid } = router.query;
+  const {blogid,category } = router.query;
   const makeComment = async () => {
     try {
       await db.collection("blogs").doc(blogid).collection("comments").add({
@@ -117,36 +121,74 @@ export default function BlogDetails({ blog, user, allComments }) {
       )}
 
       <hr />
-        {comments.length != 0 ? (
-          <div>
-            {comments.map((cmt) => {
-              return (
-                <>
+      {comments.length != 0 ? (
+        <div>
+          {comments.map((cmt) => {
+            return (
+              <>
                 <Grid container spacing={1} alignItems="flex-end" key={cmt?.at}>
-                  
-                  <Grid item style={{margin:"0.5rem"}}>
+                  <Grid item style={{ margin: "0.5rem" }}>
                     <Avatar alt={user?.name} src={cmt?.photo} />
                   </Grid>
-                  <Grid item style={{margin:"0.5rem"}}>
-                    <Typography variant="h6">{cmt?.name} 
-                    {/* <ReactTimeAgo date={cmt?.at} locale="en-US" /> */}
+                  <Grid item style={{ margin: "0.5rem" }}>
+                    <Typography variant="h6">
+                      {cmt?.name}
+                      {/* <ReactTimeAgo date={cmt?.at} locale="en-US" /> */}
                     </Typography>
                     <Typography variant="body1">{cmt?.text}</Typography>
                   </Grid>
-            </Grid>
-                </>
-              );
-            })}
-          </div>
-        ) : (
-          <p>No comments at</p>
-        )}
+                </Grid>
+              </>
+            );
+          })}
+        </div>
+      ) : (
+        <p>No comments at</p>
+      )}
+
+{userEmail == "kaalashiva.kar@gmail.com" ? (
+        <Link href={`/${category}/${blogid}/update`} replace>
+          <a >
+          <Fab
+            color="secondary" aria-label="edit"
+            style={{
+              position: "absolute",
+              bottom: "2vh",
+              right: "2vh",
+            }}
+          >
+            <EditIcon />
+          </Fab>
+          </a>
+        </Link>
+      ) : null}
     </Container>
   );
 }
 
+// This function gets called at build time
+export async function getStaticPaths() {
+  // Call an external API endpoint to get posts
+
+  const querySnap = await db.collection("blogs").get();
+  const posts = querySnap.docs.map((docSnap) => {
+    return {
+      ...docSnap.data(),
+      id: docSnap.id,
+    };
+  });
+  // Get the paths we want to pre-render based on posts
+  const paths = posts.map((post) => ({
+    params: { category: post.catergory, blogid: post.id },
+  }));
+
+  // We'll pre-render only these paths at build time.
+  // { fallback: false } means other routes should 404.
+  return { paths, fallback: true };
+}
+
 // This gets called on every request
-export async function getServerSideProps({ params: { blogid, category } }) {
+export async function getStaticProps({ params: { blogid } }) {
   // Fetch data from external API
   const result = await db.collection("blogs").doc(blogid).get();
   // console.log(result.data());
@@ -169,5 +211,9 @@ export async function getServerSideProps({ params: { blogid, category } }) {
       },
       allComments,
     },
+
+    // Re-generate the post at most once per second
+    // if a request comes in
+    revalidate: 1,
   };
 }

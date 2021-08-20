@@ -50,7 +50,7 @@ function Slider({ featuredBlogs }) {
         enableMouseEvents
       >
         {featuredBlogs.map((step, index) => (
-          <div key={step.label}>
+          <div key={step.id}>
             {Math.abs(activeStep - index) <= 2 ? (
               <div>
                 <Card >
