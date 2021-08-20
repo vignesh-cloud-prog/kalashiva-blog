@@ -36,7 +36,7 @@ export default function Navbar({ user }) {
 
   return (
     <div className={navClass.nav}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Avatar
             alt="Kaalashiva"
@@ -102,10 +102,10 @@ export default function Navbar({ user }) {
                 onClose={handleMenuClose}
               >
                 <MenuItem onClick={handleMenuClose}>
-                  <Link href="/login">Login</Link>
+                  <Link href="login">Login</Link>
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                  <Link href="/signup">Signup</Link>
+                  <Link href="signup">Signup</Link>
                 </MenuItem>
               </Menu>
             </>

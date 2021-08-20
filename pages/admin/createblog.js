@@ -57,7 +57,7 @@ export default function CreateBlog({ user }) {
         title,
         body: convertToRaw(body.getCurrentContent()),
         desc,
-        catergory: category,
+        category: category,
         featured: featured,
         published:published,
         imageURL: url,

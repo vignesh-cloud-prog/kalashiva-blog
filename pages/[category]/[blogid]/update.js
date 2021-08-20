@@ -30,7 +30,7 @@ export default function UpdateBlog({ blogid }) {
       setTitle(blogData.title);
       setBody(EditorState.createWithContent(convertFromRaw(blogData.body)));
       setDesc(blogData.desc);
-      setCategory(blogData.catergory);
+      setCategory(blogData.category);
       setFeatured(blogData.featured);
       setImage({
         preview: blogData.imageURL,
@@ -72,7 +72,7 @@ export default function UpdateBlog({ blogid }) {
     title,
     body: convertToRaw(body.getCurrentContent()),
     desc,
-    catergory: category,
+    category: category,
     featured: featured,
     imageURL: image.preview,
   };

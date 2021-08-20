@@ -12,7 +12,7 @@ const Editor = dynamic(
   }
 );
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from "@material-ui/icons/Edit";
 import {
   Avatar,
   Container,
@@ -34,9 +34,8 @@ export default function BlogDetails({ blog, user, allComments }) {
   const toolStyle = { display: "none" };
   const [comment, setComment] = useState("");
   const [comments, setAllComments] = useState(allComments);
- 
 
-  const contentState = convertFromRaw(blog.body);
+  const contentState = convertFromRaw(blog?.body);
   const content = EditorState.createWithContent(contentState);
 
   const [message, setMessage] = useState("");
@@ -44,7 +43,7 @@ export default function BlogDetails({ blog, user, allComments }) {
   const [showMessage, setShowMessage] = useState(false);
 
   const router = useRouter();
-  const {blogid,category } = router.query;
+  const { blogid, category } = router.query;
   const makeComment = async () => {
     try {
       await db.collection("blogs").doc(blogid).collection("comments").add({
@@ -146,19 +145,20 @@ export default function BlogDetails({ blog, user, allComments }) {
         <p>No comments at</p>
       )}
 
-{userEmail == "kaalashiva.kar@gmail.com" ? (
+      {userEmail == "kaalashiva.kar@gmail.com" ? (
         <Link href={`/${category}/${blogid}/update`} replace>
-          <a >
-          <Fab
-            color="secondary" aria-label="edit"
-            style={{
-              position: "absolute",
-              bottom: "2vh",
-              right: "2vh",
-            }}
-          >
-            <EditIcon />
-          </Fab>
+          <a>
+            <Fab
+              color="secondary"
+              aria-label="edit"
+              style={{
+                position: "fixed",
+                bottom: "2vh",
+                right: "2vh",
+              }}
+            >
+              <EditIcon />
+            </Fab>
           </a>
         </Link>
       ) : null}
@@ -179,12 +179,12 @@ export async function getStaticPaths() {
   });
   // Get the paths we want to pre-render based on posts
   const paths = posts.map((post) => ({
-    params: { category: post.catergory, blogid: post.id },
+    params: { category: post.category, blogid: post.id },
   }));
 
   // We'll pre-render only these paths at build time.
   // { fallback: false } means other routes should 404.
-  return { paths, fallback: true };
+  return { paths, fallback: false };
 }
 
 // This gets called on every request

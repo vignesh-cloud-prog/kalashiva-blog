@@ -1,4 +1,4 @@
-import { Container, Grid } from "@material-ui/core";
+import { Container, Grid, Typography } from "@material-ui/core";
 import BlogCard from "../../components/Blog/BlogCard";
 import React from "react";
 import { db } from "../../firebase/firebase";
@@ -8,7 +8,8 @@ export default function Categories({ blogs, category, featuredBlogs }) {
   return (
     <Main featuredBlogs={featuredBlogs}>
       <h1>{`${category}`}</h1>
-      <Grid container spacing={3}>
+      {blogs?.length ? <Grid container spacing={3}>
+        
         {blogs.map((blog) => (
           <Grid item xs={12} md={6} lg={3} key={blog.id}>
             <BlogCard
@@ -17,12 +18,14 @@ export default function Categories({ blogs, category, featuredBlogs }) {
               slug={blog?.slug}
               desc={blog?.desc}
               id={blog?.id}
-              catergory={blog?.catergory}
+              category={blog?.category}
               createdAt={blog?.createdAt}
             />
           </Grid>
         ))}
-      </Grid>
+      </Grid>:
+      <Typography>{`no ${category} are available`}</Typography>}
+      
     </Main>
   );
 }
@@ -39,12 +42,12 @@ export async function getStaticPaths() {
   });
   // Get the paths we want to pre-render based on posts
   const paths = posts.map((post) => ({
-    params: { category: post.catergory },
+    params: { category: post.category },
   }));
 
   // We'll pre-render only these paths at build time.
   // { fallback: false } means other routes should 404.
-  return { paths, fallback: true };
+  return { paths, fallback: false };
 }
 
 export async function getStaticProps({ params: { category } }) {
@@ -52,7 +55,7 @@ export async function getStaticProps({ params: { category } }) {
   const allBlogs = db.collection("blogs");
 
   // Create a query against the collection
-  const blogsSnap = await allBlogs.where("catergory", "==", category).get();
+  const blogsSnap = await allBlogs.where("category", "==", category).get();
 
   // Create blogs array
   const blogs = blogsSnap.docs.map((docSnap) => {

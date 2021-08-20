@@ -60,7 +60,7 @@ function Slider({ featuredBlogs }) {
                       image={step.imageURL}
                       title="Contemplative Reptile"
                     />
-                    <Link href={`${step.catergory}/${step.id}`}>
+                    <Link href={`${step.category}/${step.id}`}>
                     <a >
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">

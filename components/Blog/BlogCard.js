@@ -29,7 +29,7 @@ export default function BlogCard({
   desc,
   createdAt,
   image,
-  catergory,
+  category,
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
@@ -55,7 +55,7 @@ export default function BlogCard({
                     color="secondary"
                     edge="end"
                   >
-                    {catergory}
+                    {category}
                   </Button>
                 </Grid>
               </Grid>
@@ -67,7 +67,7 @@ export default function BlogCard({
 
       <CardMedia className={classes.media} image={image} />
 
-      <Link href={`/${catergory}/${id}`}>
+      <Link href={`/${category}/${id}`}>
         <a>
           <CardContent>
             <Typography noWrap variant="body2" color="textSecondary" component="p">
