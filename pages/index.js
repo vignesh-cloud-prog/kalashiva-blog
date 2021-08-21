@@ -1,6 +1,11 @@
-import { db } from "../firebase/firebase";
+// Next related
 import styles from "../styles/Home.module.css";
+import Link from "next/link";
+
+// React related
 import { useState } from "react";
+
+// Matrial Ui components
 import {
   Container,
   Grid,
@@ -9,25 +14,31 @@ import {
   Fab,
   Typography,
 } from "@material-ui/core";
-import BlogCard from "../components/Blog/BlogCard";
-import homeStyles from "../styles/homeStyles";
-import Main from "../components/layout/mainLayout";
 import AddIcon from "@material-ui/icons/Add";
-import Link from "next/link";
+import homeStyles from "../styles/homeStyles";
+
+// Components
+import Main from "../components/layout/mainLayout";
+import BlogCard from "../components/Blog/BlogCard";
+
+// Firebase related import
+import { db } from "../firebase/firebase";
 
 function Home({ allBlogs, featuredBlogs, user }) {
+  // Checking email for admin to provide extra functionality
   let userEmail;
   if (user != null) userEmail = user["email"];
 
+  // Styles from material ui useStyle
   const classes = homeStyles();
+
+  // React state
   const [blogs, setBlogs] = useState(allBlogs);
   const [end, setEnd] = useState(false);
-
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
+  // Function to load more Recent Blogs
   const loadMore = async () => {
-    setSuccess(false);
     setLoading(true);
     const last = blogs[blogs.length - 1];
     const res = await db
@@ -48,9 +59,10 @@ function Home({ allBlogs, featuredBlogs, user }) {
     if (newblogs.length < 4) {
       setEnd(true);
     }
-    setSuccess(true);
+
     setLoading(false);
   };
+
   return (
     <Main featuredBlogs={featuredBlogs}>
       <h1>Recent Blogs</h1>
@@ -71,7 +83,7 @@ function Home({ allBlogs, featuredBlogs, user }) {
                 />
               </Grid>
             ))}
-          </Grid>{" "}
+          </Grid>
           {end == false ? (
             <>
               <div className={classes.wrapper}>
@@ -99,13 +111,14 @@ function Home({ allBlogs, featuredBlogs, user }) {
               </div>
             </>
           ) : (
-            <h3>You have reached end</h3>
+            <Typography align="center">You have reached the end</Typography>
           )}
         </>
       ) : (
-        <Typography>No Blogs are available</Typography>
+        <Typography align="center">No Blogs are available</Typography>
       )}
 
+      {/* Admin have the option to add new blogs in this home page */}
       {userEmail == "kaalashiva.kar@gmail.com" ? (
         <Link href="admin/createblog">
           <a>
@@ -131,11 +144,14 @@ export default Home;
 
 // This gets called on every request
 export async function getStaticProps() {
+  // Generation of static page
   // Fetch data from external API
+
+  // Fetching Recent blogs for
   const querySnap = await db
     .collection("blogs")
     .orderBy("createdAt", "desc")
-    .limit(8)
+    .limit(4)
     .get();
   const allBlogs = querySnap.docs.map((docSnap) => {
     return {
@@ -145,6 +161,7 @@ export async function getStaticProps() {
     };
   });
 
+  // Fetching Featured Blogs
   const blogSnap = await db
     .collection("blogs")
     .where("featured", "==", true)

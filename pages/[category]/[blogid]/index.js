@@ -1,10 +1,15 @@
+// React related
 import React from "react";
-import Head from 'next/head'
-import dynamic from "next/dynamic";
-import { db, serverTimeStamp } from "../../../firebase/firebase";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/dist/client/router";
+
+// Next related
+import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/dist/client/router";
+
+// Draft js related
 import { convertFromRaw, EditorState } from "draft-js";
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((module) => module.Editor),
@@ -13,7 +18,8 @@ const Editor = dynamic(
   }
 );
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import EditIcon from "@material-ui/icons/Edit";
+
+// Material ui components
 import {
   Avatar,
   Container,
@@ -24,14 +30,22 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { Send } from "@material-ui/icons";
+import { Send, EditIcon } from "@material-ui/icons";
+
+// Components
 import Alerts from "../../../components/Main/alerts";
-import Link from "next/link";
+
+// React Time ago component
 import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
 
+// Firebase
+import { db, serverTimeStamp } from "../../../firebase/firebase";
+
 export default function BlogDetails({ blog, user, allComments }) {
+  // Checking Amin for providing special functionality
   let userEmail;
   if (user != null) userEmail = user["email"];
+
   const toolStyle = { display: "none" };
   const [comment, setComment] = useState("");
   const [comments, setAllComments] = useState(allComments);
@@ -45,7 +59,9 @@ export default function BlogDetails({ blog, user, allComments }) {
 
   const router = useRouter();
   const { blogid, category } = router.query;
+
   const makeComment = async () => {
+    // Function make comments by user related to post
     try {
       await db.collection("blogs").doc(blogid).collection("comments").add({
         text: comment,
@@ -74,12 +90,18 @@ export default function BlogDetails({ blog, user, allComments }) {
       <Head>
         <title>{`${blog.title} | kaalashiva`}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta name="description" content={`${blog.desc}`}/>
+        <meta name="description" content={`${blog.desc}`} />
       </Head>
       {showMessage ? <Alerts message={message} type={severity} /> : <></>}
       <h1>{blog.title}</h1>
       <h5>created on - {new Date(blog.createdAt).toDateString()}</h5>
-      <Image width="90vw" height="3ovh" layout="responsive" src={blog.imageURL} alt="image" />
+      <Image
+        width="90vw"
+        height="3ovh"
+        layout="responsive"
+        src={blog.imageURL}
+        alt="image"
+      />
       <Editor
         editorState={content}
         readOnly={true}

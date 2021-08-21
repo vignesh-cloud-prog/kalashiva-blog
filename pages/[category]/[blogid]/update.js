@@ -1,11 +1,25 @@
+// React related
 import React, { useEffect, useState } from "react";
-import { async } from "regenerator-runtime";
+
+// Next related
+import { useRouter } from "next/router";
+
+// Components
 import BlogEditor from "../../../components/Blog/blogEditor";
-import { db, serverTimeStamp, storage } from "../../../firebase/firebase";
+
+// Draft js related
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+
+// UUID
 import { v4 as uuidv4 } from "uuid";
 
-export default function UpdateBlog({ blogid }) {
+//  Firebase
+import { db, serverTimeStamp, storage } from "../../../firebase/firebase";
+
+export default function UpdateBlog() {
+  const router = useRouter();
+  const { blogid } = router.query;
+
   const [title, setTitle] = useState("");
   const [body, setBody] = useState(() => EditorState.createEmpty());
   const [image, setImage] = useState({ preview: "", raw: "" });
@@ -19,7 +33,10 @@ export default function UpdateBlog({ blogid }) {
   const [showMessage, setShowMessage] = useState(false);
 
   const [updateBlogState, setupdateBlogState] = useState(false);
+
+  // function retives the actual data to update current blog
   const blog = async () => {
+    // Fetching blog data
     const cityRef = db.collection("blogs").doc(blogid);
     const doc = await cityRef.get();
     if (!doc.exists) {
@@ -68,6 +85,8 @@ export default function UpdateBlog({ blogid }) {
     showMessage,
     setShowMessage,
   };
+
+  // Data object passed while updating
   let blogfields = {
     title,
     body: convertToRaw(body.getCurrentContent()),
@@ -76,6 +95,8 @@ export default function UpdateBlog({ blogid }) {
     featured: featured,
     imageURL: image.preview,
   };
+
+  // This fuction updates the blog
   const updateBlog = async () => {
     try {
       await db.collection("blogs").doc(blogid).set(blogfields, { merge: true });
@@ -92,6 +113,7 @@ export default function UpdateBlog({ blogid }) {
   };
 
   useEffect(() => {
+    // Checking whether blog thumb image updated
     if (url) {
       blogfields.imageURL = url;
     }
@@ -101,10 +123,12 @@ export default function UpdateBlog({ blogid }) {
     }
   }, [updateBlogState, url]);
 
+  // Handling the blog submit update
   const submitDetails = (e) => {
     e.preventDefault();
 
     if (title || body || slug) {
+      // If new thumb image then upload it firebase storage
       if (image.raw) {
         var uploadTask = storage
           .ref()
@@ -167,12 +191,4 @@ export default function UpdateBlog({ blogid }) {
       ></BlogEditor>
     </div>
   );
-}
-
-export async function getServerSideProps({ params: { blogid } }) {
-  // Create a reference to the blogsF collection
-
-  return {
-    props: { blogid }, // will be passed to the page component as props
-  };
 }

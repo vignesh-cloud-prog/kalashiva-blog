@@ -1,13 +1,19 @@
+// React
 import React from "react";
+
+// Next
 import Link from "next/link";
 import { useRouter } from 'next/router'
+
+// Material ui
 import { Tab, Tabs, AppBar, Grid } from "@material-ui/core";
 import { BrandingWatermark, Home } from "@material-ui/icons";
 
 export default function HomeTabs() {
   const router = useRouter()
   const categories = ["ಲೇಖನ", "ಕಥೆ", "ಕವಿತೆ"];
-  const [value, setValue] = React.useState(-1);
+  const {category}=router.query
+  const [value, setValue] = React.useState(categories.indexOf(category));
 
   const handleChange = (event, newValue) => {
     router.push(categories[newValue])
