@@ -150,7 +150,7 @@ export async function getStaticProps() {
   // Fetching Recent blogs for
   const querySnap = await db
     .collection("blogs")
-    .where("published", "==", true)
+    // .where("published", "==", true)
     .orderBy("createdAt", "desc")
     .limit(4)
     .get();
