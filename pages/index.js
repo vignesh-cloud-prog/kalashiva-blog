@@ -24,7 +24,7 @@ import BlogCard from "../components/Blog/BlogCard";
 // Firebase related import
 import { db } from "../firebase/firebase";
 
-function Home({ allBlogs, featuredBlogs, user }) {
+export default function Home({ allBlogs, featuredBlogs, user }) {
   // Checking email for admin to provide extra functionality
   let userEmail;
   if (user != null) userEmail = user["email"];
@@ -140,7 +140,7 @@ function Home({ allBlogs, featuredBlogs, user }) {
   );
 }
 
-export default Home;
+
 
 // This gets called on every request
 export async function getStaticProps() {
