@@ -7,75 +7,37 @@ import { useRouter } from "next/router";
 // Components
 import BlogEditor from "../../../components/Blog/blogEditor";
 
-// Draft js related
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-
 // UUID
 import { v4 as uuidv4 } from "uuid";
 
 //  Firebase
 import { db, serverTimeStamp, storage } from "../../../firebase/firebase";
 
-export default function UpdateBlog() {
-  const router = useRouter();
-  const { blogid } = router.query;
+export default function UpdateBlog({ blog, blogid }) {
+  const [blogInfo, setBlogInfo] = useState({
+    title: blog.title,
 
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState(() => EditorState.createEmpty());
-  const [image, setImage] = useState({ preview: "", raw: "" });
-  const [url, setUrl] = useState("");
-  const [desc, setDesc] = useState("");
-  const [category, setCategory] = useState("");
-  const [featured, setFeatured] = useState(false);
+    desc: blog.desc,
+    category: blog.category,
+    featured: blog.featured,
+    url: null,
+    published: blog.published,
+  });
+  //   const handleChange = e => {
+  //     const { name, value } = e.target;
+  //     setBlogInfo(prevState => ({
+  //         ...prevState,
+  //         [name]: value
+  //     }));
+  // };
+  const [blogBody, setBlogBody] = useState(blog.body);
+  const [image, setImage] = useState({ preview: blog.imageURL, raw: "" });
 
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
   const [updateBlogState, setupdateBlogState] = useState(false);
-
-  // function retives the actual data to update current blog
-  const blog = async () => {
-    // Fetching blog data
-    const cityRef = db.collection("blogs").doc(blogid);
-    const doc = await cityRef.get();
-    if (!doc.exists) {
-      console.log("No such document!");
-    } else {
-      const blogData = doc.data();
-
-      setTitle(blogData.title);
-      setBody(EditorState.createWithContent(convertFromRaw(blogData.body)));
-      setDesc(blogData.desc);
-      setCategory(blogData.category);
-      setFeatured(blogData.featured);
-      setImage({
-        preview: blogData.imageURL,
-      });
-    }
-  };
-
-  useEffect(() => {
-    blog();
-  }, []);
-  let inputState = {
-    title,
-    body,
-    image,
-    url,
-    desc,
-    category,
-    featured,
-  };
-  let inputSetState = {
-    setTitle,
-    setBody,
-    setImage,
-    setUrl,
-    setDesc,
-    setCategory,
-    setFeatured,
-  };
 
   let messageState = {
     message,
@@ -88,16 +50,18 @@ export default function UpdateBlog() {
 
   // Data object passed while updating
   let blogfields = {
-    title,
-    body: convertToRaw(body.getCurrentContent()),
-    desc,
-    category: category,
-    featured: featured,
+    title: blogInfo.title,
+    body: blogBody,
+    desc: blogInfo.desc,
+    category: blogInfo.category,
+    featured: blogInfo.featured,
+    published: blogInfo.published,
     imageURL: image.preview,
   };
 
   // This fuction updates the blog
   const updateBlog = async () => {
+    console.log(blogfields);
     try {
       await db.collection("blogs").doc(blogid).set(blogfields, { merge: true });
 
@@ -114,20 +78,20 @@ export default function UpdateBlog() {
 
   useEffect(() => {
     // Checking whether blog thumb image updated
-    if (url) {
-      blogfields.imageURL = url;
+    if (blogInfo.url) {
+      blogfields.imageURL = blogInfo.url;
     }
     if (updateBlogState) {
       updateBlog();
       setupdateBlogState(false);
     }
-  }, [updateBlogState, url]);
+  }, [updateBlogState, blogInfo.url]);
 
   // Handling the blog submit update
   const submitDetails = (e) => {
     e.preventDefault();
 
-    if (title || body || slug) {
+    if (blogInfo.title != "" && blogBody != "") {
       // If new thumb image then upload it firebase storage
       if (image.raw) {
         var uploadTask = storage
@@ -168,7 +132,7 @@ export default function UpdateBlog() {
           },
           () => {
             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-              setUrl(downloadURL);
+              setBlogInfo({ ...blogInfo, url: downloadURL });
             });
           }
         );
@@ -180,15 +144,34 @@ export default function UpdateBlog() {
       setShowMessage(true);
     }
   };
+
   return (
     <div>
       <h1>Blog update page</h1>
       <BlogEditor
-        inputStats={inputState}
-        inputSetState={inputSetState}
+        inputState={blogInfo}
+        inputSetState={setBlogInfo}
         messageState={messageState}
         submitDetails={submitDetails}
+        setImage={setImage}
+        image={image}
+        setBlogBody={setBlogBody}
+        blogBody={blogBody}
       ></BlogEditor>
     </div>
   );
+}
+
+export async function getServerSideProps({ params: { blogid } }) {
+  // Create a reference to the blogsF collection
+  const result = await db.collection("blogs").doc(blogid).get();
+  return {
+    props: {
+      blog: {
+        ...result.data(),
+        createdAt: result.data().createdAt.toMillis(),
+      },
+      blogid,
+    }, // will be passed to the page component as props
+  };
 }

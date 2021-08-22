@@ -1,46 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { db, serverTimeStamp, storage } from "../../firebase/firebase";
 import useStyles from "../../styles/usestyles";
 import BlogEditor from "../../components/Blog/blogEditor";
 
 export default function CreateBlog({ user }) {
   const classes = useStyles();
+  const [blogInfo, setBlogInfo] = useState({
+    title: "",
 
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState(() => EditorState.createEmpty());
+    desc: "",
+    category: "",
+    featured: false,
+    url: null,
+    published: false,
+  });
+
+  const [blogBody, setBlogBody] = useState("create awesome blog");
   const [image, setImage] = useState({ preview: "", raw: null });
-  const [url, setUrl] = useState("");
-  const [desc, setDesc] = useState("");
-  const [category, setCategory] = useState("");
-  const [featured, setFeatured] = useState(false);
-  const [published, setPublished] = useState(false);
 
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("");
   const [showMessage, setShowMessage] = useState(false);
-
-  let inputState = {
-    title,
-    body,
-    image,
-    url,
-    desc,
-    category,
-    featured,
-    published,
-  };
-  let inputSetState = {
-    setTitle,
-    setBody,
-    setImage,
-    setUrl,
-    setDesc,
-    setCategory,
-    setFeatured,
-    setPublished,
-  };
 
   let messageState = {
     message,
@@ -51,18 +32,20 @@ export default function CreateBlog({ user }) {
     setShowMessage,
   };
 
+  // body: convertToRaw(body.getCurrentContent()),
   useEffect(() => {
-    if (url) {
+    if (blogInfo.url) {
       const blogdata = {
-        title,
-        body: convertToRaw(body.getCurrentContent()),
-        desc,
-        category: category,
-        featured: featured,
-        published:published,
-        imageURL: url,
+        title: blogInfo.title,
+        body: blogBody,
+        desc: blogInfo.desc,
+        category: blogInfo.category,
+        featured: blogInfo.featured,
+        published: blogInfo.published,
+        imageURL: blogInfo.url,
         postedBy: user?.displayName,
         createdAt: serverTimeStamp(),
+        viewCount:0,
       };
 
       db.collection("blogs")
@@ -78,11 +61,11 @@ export default function CreateBlog({ user }) {
           setShowMessage(true);
         });
     }
-  }, [url]);
+  }, [blogInfo.url]);
 
   const submitDetails = (e) => {
     e.preventDefault();
-    if (title || body || image || slug) {
+    if (blogInfo.title && blogBody && image) {
       var uploadTask = storage.ref().child(`images/${uuidv4()}`).put(image.raw);
       uploadTask.on(
         "state_changed",
@@ -102,7 +85,7 @@ export default function CreateBlog({ user }) {
         () => {
           uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
             console.log("File available at", downloadURL);
-            setUrl(downloadURL);
+            setBlogInfo({ ...blogInfo, url: downloadURL });
           });
         }
       );
@@ -116,10 +99,14 @@ export default function CreateBlog({ user }) {
   return (
     <div>
       <BlogEditor
-        inputStats={inputState}
-        inputSetState={inputSetState}
+        inputState={blogInfo}
+        inputSetState={setBlogInfo}
         messageState={messageState}
         submitDetails={submitDetails}
+        setImage={setImage}
+        image={image}
+        setBlogBody={setBlogBody}
+        blogBody={blogBody}
       ></BlogEditor>
     </div>
   );

@@ -11,7 +11,7 @@ const navStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
-  index:1,
+  
 }));
 
 export default navStyles;

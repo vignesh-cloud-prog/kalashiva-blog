@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -23,6 +23,8 @@ import {
   ShareOutlined,
 } from "@material-ui/icons";
 
+import ShareContext from "../../store/share_context";
+import { useState } from "react";
 export default function BlogCard({
   id,
   title,
@@ -31,6 +33,15 @@ export default function BlogCard({
   image,
   category,
 }) {
+  const data = useContext(ShareContext)
+  const {addToShare}=data
+  
+  const [shareData,setShareData]=useState({})
+  useEffect(() => {
+    
+    setShareData({url:`${window.location.protocol}//${window.location.hostname}/${category}/${id}`,title:`${title}`,summary:`${desc}`,open:true})
+    
+  }, [])
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -84,7 +95,7 @@ export default function BlogCard({
           <LibraryAddOutlined />
         </IconButton>
 
-        <IconButton aria-label="share" className={classes.expand}>
+        <IconButton aria-label="share" className={classes.expand} onClick={()=>addToShare(shareData)}>
           <ShareOutlined />
         </IconButton>
       </CardActions>

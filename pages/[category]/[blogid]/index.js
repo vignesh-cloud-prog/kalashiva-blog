@@ -1,23 +1,12 @@
 // React related
-import React from "react";
+
 import { useEffect, useState } from "react";
 
 // Next related
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/dist/client/router";
-
-// Draft js related
-import { convertFromRaw, EditorState } from "draft-js";
-const Editor = dynamic(
-  () => import("react-draft-wysiwyg").then((module) => module.Editor),
-  {
-    ssr: false,
-  }
-);
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { useRouter } from "next/router";
 
 // Material ui components
 import {
@@ -30,16 +19,15 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { Send, EditIcon } from "@material-ui/icons";
+import EditIcon from "@material-ui/icons/Edit";
+
+import { Send } from "@material-ui/icons";
 
 // Components
 import Alerts from "../../../components/Main/alerts";
 
-// React Time ago component
-import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
-
 // Firebase
-import { db, serverTimeStamp } from "../../../firebase/firebase";
+import { db, serverTimeStamp,increment } from "../../../firebase/firebase";
 
 export default function BlogDetails({ blog, user, allComments }) {
   // Checking Amin for providing special functionality
@@ -50,8 +38,8 @@ export default function BlogDetails({ blog, user, allComments }) {
   const [comment, setComment] = useState("");
   const [comments, setAllComments] = useState(allComments);
 
-  const contentState = convertFromRaw(blog?.body);
-  const content = EditorState.createWithContent(contentState);
+  // const contentState = convertFromRaw(blog?.body);
+  // const content = EditorState.createWithContent(contentState);
 
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("");
@@ -60,6 +48,17 @@ export default function BlogDetails({ blog, user, allComments }) {
   const router = useRouter();
   const { blogid, category } = router.query;
 
+  const incrementViewCount = () => {
+    // Document reference
+    const blogRef = db.collection("blogs").doc(blogid);
+
+    // Update read count
+    blogRef.update({ viewCount: increment });
+  };
+
+  useEffect(() => {
+    incrementViewCount()
+  }, [])
   const makeComment = async () => {
     // Function make comments by user related to post
     try {
@@ -84,7 +83,7 @@ export default function BlogDetails({ blog, user, allComments }) {
     }
     setComment("");
   };
-
+  
   return (
     <Container>
       <Head>
@@ -96,19 +95,14 @@ export default function BlogDetails({ blog, user, allComments }) {
       <h1>{blog.title}</h1>
       <h5>created on - {new Date(blog.createdAt).toDateString()}</h5>
       <Image
-        width="90vw"
-        height="3ovh"
+        width="90vh"
+        height="30vw"
         layout="responsive"
         src={blog.imageURL}
         alt="image"
       />
-      <Editor
-        editorState={content}
-        readOnly={true}
-        toolbar={{
-          options: [],
-        }}
-      />
+
+      <div dangerouslySetInnerHTML={{ __html: blog.body }}></div>
       <Typography variant="h5">Comments</Typography>
       {user ? (
         <>
@@ -141,7 +135,7 @@ export default function BlogDetails({ blog, user, allComments }) {
         </>
       ) : (
         <>
-          <Link href="\login">
+          <Link href="login">
             <a>Please login to make comment</a>
           </Link>
         </>
