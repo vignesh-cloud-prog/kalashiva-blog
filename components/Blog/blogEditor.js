@@ -20,7 +20,6 @@ import { CKEditor } from "ckeditor4-react";
 export default function BlogEditor({
   inputState,
   inputSetState,
-  messageState,
   blogBody,
   setBlogBody,
   image,
@@ -31,36 +30,12 @@ export default function BlogEditor({
   // editor.setData(blogBody)
   const classes = useStyles();
 
-  const {
-    message,
-    severity,
-    showMessage,
-    setShowMessage,
-    setSeverity,
-    setMessage,
-  } = messageState;
   const { featured, category, desc, url, body, title, published } = inputState;
 
-  // const {
-  //   setTitle,
-  //   setBlogBody,
-
-  //   setUrl,
-  //   setDesc,
-  //   setCategory,
-  //   setFeatured,
-  //   setPublished,
-  // } = inputSetState;
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowMessage(false);
-    }, 5000);
-  }, [showMessage]);
+  
 
   return (
     <div>
-      {showMessage ? <Alerts message={message} type={severity} /> : <></>}
 
       <Container width="md">
         <Typography variant="h4" component="h1">

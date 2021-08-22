@@ -1,28 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import Alert from "@material-ui/lab/Alert";
-// import useStyles from "../styles/usestyles";
-import IconButton from "@material-ui/core/IconButton";
-import Collapse from "@material-ui/core/Collapse";
-import Button from "@material-ui/core/Button";
-import CloseIcon from "@material-ui/icons/Close";
 import { Snackbar } from "@material-ui/core";
+import MessageContext from "../../store/message_context";
 
-export default function Alerts({ message, type }) {
-  const [open, setOpen] = React.useState(true);
+export default function Alerts() {
+  const data = useContext(MessageContext);
+  const {open, msg, type,duration=6000} = data.message;
+  const { removeMessage } = data;
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
-    setOpen(false);
+    removeMessage();
   };
-  
+
   return (
-  
-    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={type}>
-          {message}
-        </Alert>
-      </Snackbar>
+    <Snackbar open={open} autoHideDuration={duration} onClose={handleClose}>
+      <Alert onClose={handleClose} severity={type}>
+        {msg}
+      </Alert>
+    </Snackbar>
   );
 }

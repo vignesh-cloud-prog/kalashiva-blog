@@ -1,6 +1,6 @@
 // React components
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 
 // Firebase auth components
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -13,7 +13,7 @@ import Head from "next/head";
 import Image from "next/image";
 
 // Componetnts
-import Alerts from "../components/Main/alerts";
+import MessageContext from "../store/message_context";
 
 // Material ui components
 import SignupStyle from "../styles/signupStyles";
@@ -36,9 +36,8 @@ export default function Signup() {
   const [password, setPassword] = useState(``);
   const [showPassword, setShowPassword] = useState(false);
 
-  const [message, setMessage] = useState("");
-  const [severity, setSeverity] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
+  const data = useContext(MessageContext)
+  const {addMessage}=data
 
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
@@ -59,13 +58,11 @@ export default function Signup() {
       await result.user.updateProfile({
         displayName: name,
       });
-      setMessage(`Welcome ${result.user.displayName}`);
-      setSeverity("success");
-      setShowMessage(true);
+      addMessage(`Welcome ${result.user.displayName}`,"success")
+      
     } catch (err) {
-      setMessage(err.message);
-      setSeverity("error");
-      setShowMessage(true);
+      addMessage(err.message,"error")
+      
     }
   };
   return (
@@ -77,7 +74,6 @@ export default function Signup() {
           content="Signup to kaalashiva, kannada blogs website"
         />
       </Head>
-      {showMessage ? <Alerts message={message} type={severity} /> : <></>}
       <Container maxWidth="sm">
         <Container maxWidth="sm" className={classes.padd}>
           <div className={classes.mb}>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const AdminPage = () => {
+export default function Admin() {
     return (
         <div>
             I am Admin

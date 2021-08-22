@@ -33,15 +33,18 @@ export default function BlogCard({
   image,
   category,
 }) {
-  const data = useContext(ShareContext)
-  const {addToShare}=data
-  
-  const [shareData,setShareData]=useState({})
+  const data = useContext(ShareContext);
+  const { addToShare } = data;
+
+  const [shareData, setShareData] = useState({});
   useEffect(() => {
-    
-    setShareData({url:`${window.location.protocol}//${window.location.hostname}/${category}/${id}`,title:`${title}`,summary:`${desc}`,open:true})
-    
-  }, [])
+    setShareData({
+      url: `${window.location.protocol}//${window.location.hostname}/${category}/${id}`,
+      title: `${title}`,
+      summary: `${desc}`,
+      open: true,
+    });
+  }, []);
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -81,7 +84,12 @@ export default function BlogCard({
       <Link href={`/${category}/${id}`}>
         <a>
           <CardContent>
-            <Typography noWrap variant="body2" color="textSecondary" component="p">
+            <Typography
+              noWrap
+              variant="body2"
+              color="textSecondary"
+              component="p"
+            >
               {desc} <Typography variant="body2">Read more</Typography>
             </Typography>
           </CardContent>
@@ -95,7 +103,11 @@ export default function BlogCard({
           <LibraryAddOutlined />
         </IconButton>
 
-        <IconButton aria-label="share" className={classes.expand} onClick={()=>addToShare(shareData)}>
+        <IconButton
+          aria-label="share"
+          className={classes.expand}
+          onClick={() => addToShare(shareData)}
+        >
           <ShareOutlined />
         </IconButton>
       </CardActions>

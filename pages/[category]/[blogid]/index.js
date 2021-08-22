@@ -1,6 +1,6 @@
 // React related
 
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 
 // Next related
 import Head from "next/head";
@@ -24,7 +24,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Send } from "@material-ui/icons";
 
 // Components
-import Alerts from "../../../components/Main/alerts";
+import MessageContext from "../../../store/message_context";
 
 // Firebase
 import { db, serverTimeStamp,increment } from "../../../firebase/firebase";
@@ -38,12 +38,8 @@ export default function BlogDetails({ blog, user, allComments }) {
   const [comment, setComment] = useState("");
   const [comments, setAllComments] = useState(allComments);
 
-  // const contentState = convertFromRaw(blog?.body);
-  // const content = EditorState.createWithContent(contentState);
-
-  const [message, setMessage] = useState("");
-  const [severity, setSeverity] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
+  const data = useContext(MessageContext)
+  const {addMessage}=data
 
   const router = useRouter();
   const { blogid, category } = router.query;
@@ -73,13 +69,11 @@ export default function BlogDetails({ blog, user, allComments }) {
         .collection("comments")
         .get();
       setAllComments(commentQuery.docs.map((docSnap) => docSnap.data()));
-      setMessage(`comment added`);
-      setSeverity("success");
-      setShowMessage(true);
+      addMessage(`Your comment added`,"success")
+      
     } catch (error) {
-      setMessage(err.message);
-      setSeverity("error");
-      setShowMessage(true);
+      addMessage(err.message,"error")
+      
     }
     setComment("");
   };
@@ -91,7 +85,6 @@ export default function BlogDetails({ blog, user, allComments }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content={`${blog.desc}`} />
       </Head>
-      {showMessage ? <Alerts message={message} type={severity} /> : <></>}
       <h1>{blog.title}</h1>
       <h5>created on - {new Date(blog.createdAt).toDateString()}</h5>
       <Image
@@ -135,7 +128,7 @@ export default function BlogDetails({ blog, user, allComments }) {
         </>
       ) : (
         <>
-          <Link href="login">
+          <Link href="/login">
             <a>Please login to make comment</a>
           </Link>
         </>

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { db, serverTimeStamp, storage } from "../../firebase/firebase";
 import useStyles from "../../styles/usestyles";
 import BlogEditor from "../../components/Blog/blogEditor";
+import MessageContext from "../../store/message_context";
 
 export default function CreateBlog({ user }) {
   const classes = useStyles();
@@ -19,18 +20,10 @@ export default function CreateBlog({ user }) {
   const [blogBody, setBlogBody] = useState("create awesome blog");
   const [image, setImage] = useState({ preview: "", raw: null });
 
-  const [message, setMessage] = useState("");
-  const [severity, setSeverity] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
+  const data = useContext(MessageContext);
+  const { addMessage } = data;
 
-  let messageState = {
-    message,
-    setMessage,
-    severity,
-    setSeverity,
-    showMessage,
-    setShowMessage,
-  };
+  
 
   // body: convertToRaw(body.getCurrentContent()),
   useEffect(() => {
@@ -45,20 +38,16 @@ export default function CreateBlog({ user }) {
         imageURL: blogInfo.url,
         postedBy: user?.displayName,
         createdAt: serverTimeStamp(),
-        viewCount:0,
+        viewCount: 0,
       };
 
       db.collection("blogs")
         .add(blogdata)
         .then(() => {
-          setMessage(`Blog created`);
-          setSeverity("success");
-          setShowMessage(true);
+          addMessage(`Blog created`, "success");
         })
         .catch((error) => {
-          setMessage(error.message);
-          setSeverity("error");
-          setShowMessage(true);
+          addMessage(error.message, "error");
         });
     }
   }, [blogInfo.url]);
@@ -73,14 +62,10 @@ export default function CreateBlog({ user }) {
           var progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log("Upload is " + progress + "% done");
-          if (progress == 100) setMessage(`Image uploaded`);
-          setSeverity("success");
-          setShowMessage(true);
+          if (progress == 100) addMessage(`Image uploaded`, "success");
         },
         (error) => {
-          setMessage(error.message);
-          setSeverity("error");
-          setShowMessage(true);
+          addMessage(error.message, "error");
         },
         () => {
           uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
@@ -90,9 +75,8 @@ export default function CreateBlog({ user }) {
         }
       );
     } else {
-      setMessage("Please enter all the fields");
-      setSeverity("warning");
-      setShowMessage(true);
+      addMessage("Please enter all the fields","warning")
+      
     }
   };
 
@@ -101,7 +85,7 @@ export default function CreateBlog({ user }) {
       <BlogEditor
         inputState={blogInfo}
         inputSetState={setBlogInfo}
-        messageState={messageState}
+        
         submitDetails={submitDetails}
         setImage={setImage}
         image={image}

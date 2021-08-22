@@ -1,6 +1,3 @@
-// React related
-import React from "react";
-
 // Components
 import BlogCard from "../../components/Blog/BlogCard";
 import Main from "../../components/layout/mainLayout";
@@ -10,6 +7,7 @@ import { Container, Grid, Typography } from "@material-ui/core";
 
 // Firebase
 import { db } from "../../firebase/firebase";
+import { useContext } from "react";
 
 export default function Categories({ blogs, category, featuredBlogs }) {
   return (

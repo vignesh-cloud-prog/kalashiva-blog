@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { auth } from "../../firebase/firebase";
 import Link from "next/link";
-import Alerts from "../Main/alerts";
+import MessageContext from "../../store/message_context";
 import { useState, useEffect } from "react";
 import navStyles from "../../styles/navStyles";
 import AppBar from "@material-ui/core/AppBar";
@@ -13,15 +13,8 @@ import { Avatar, Menu, MenuItem } from "@material-ui/core";
 export default function Navbar({ user }) {
   const navClass = navStyles();
 
-  const [message, setMessage] = useState("");
-  const [severity, setSeverity] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowMessage(false);
-    }, 5000);
-  }, [showMessage]);
+ const data = useContext(MessageContext)
+  const {addMessage}=data
 
   const menuId = "primary-search-account-menu";
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -75,14 +68,12 @@ export default function Navbar({ user }) {
                     auth
                       .signOut()
                       .then(() => {
-                        setMessage("Log-out Successful");
-                        setSeverity("success");
-                        setShowMessage(true);
+                        addMessage("Log-out Successful","success")
+                        
                       })
                       .catch((error) => {
-                        setMessage(`${error.message} - ${error.code}`);
-                        setSeverity("error");
-                        setShowMessage(true);
+                        addMessage(`${error.message} - ${error.code}`,"error")
+                        
                       });
                   }}
                 >
@@ -112,7 +103,6 @@ export default function Navbar({ user }) {
           )}
         </Toolbar>
       </AppBar>
-      {showMessage ? <Alerts message={message} type={severity} /> : <></>}
     </div>
   );
 }

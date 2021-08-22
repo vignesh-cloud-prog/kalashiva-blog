@@ -9,14 +9,13 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
 
 // Components
-import Alerts from "../components/Main/alerts";
 import OAuth from "../components/oAuth";
 
 // Styles
 import LoginStyle from "../styles/loginStyles";
 // React
-import { useState } from "react";
-
+import { useState,useContext} from "react";
+import MessageContext from "../store/message_context";
 // Material ui Componenets
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import {
@@ -31,14 +30,11 @@ import {
 
 export default function Login({ children }) {
   const classes = LoginStyle();
-
+  const data = useContext(MessageContext)
+  const {addMessage}=data
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
   const [showPassword, setShowPassword] = useState(false);
-
-  const [message, setMessage] = useState("");
-  const [severity, setSeverity] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
 
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
@@ -49,20 +45,18 @@ export default function Login({ children }) {
   else if (error) return <h1>{error}</h1>;
   else if (user) {
     // user is already logged in, redirect to home page
-    router.push("/");
+    router.back()
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const result = await auth.signInWithEmailAndPassword(email, password);
-      setMessage(`Welcome ${result.user.displayName}`);
-      setSeverity("success");
-      setShowMessage(true);
+      addMessage(`Welcome ${result.user.displayName}`,"success",3000)
+      
     } catch (err) {
-      setMessage(err.message);
-      setSeverity("error");
-      setShowMessage(true);
+      addMessage(err.message,"error")
+     
     }
   };
 
@@ -75,7 +69,6 @@ export default function Login({ children }) {
           content="Login to kaalashiva, kannada blogs website"
         />
       </Head>
-      {showMessage ? <Alerts message={message} type={severity} /> : <></>}
       <Container maxWidth="sm">
         <Container maxWidth="sm" className={classes.padd}>
           <div className={classes.mb}>

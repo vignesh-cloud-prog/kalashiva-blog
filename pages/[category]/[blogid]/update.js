@@ -1,5 +1,5 @@
 // React related
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 // Next related
 import { useRouter } from "next/router";
@@ -13,6 +13,8 @@ import { v4 as uuidv4 } from "uuid";
 //  Firebase
 import { db, serverTimeStamp, storage } from "../../../firebase/firebase";
 
+import MessageContext from "../../../store/message_context";
+
 export default function UpdateBlog({ blog, blogid }) {
   const [blogInfo, setBlogInfo] = useState({
     title: blog.title,
@@ -23,30 +25,14 @@ export default function UpdateBlog({ blog, blogid }) {
     url: null,
     published: blog.published,
   });
-  //   const handleChange = e => {
-  //     const { name, value } = e.target;
-  //     setBlogInfo(prevState => ({
-  //         ...prevState,
-  //         [name]: value
-  //     }));
-  // };
+
   const [blogBody, setBlogBody] = useState(blog.body);
   const [image, setImage] = useState({ preview: blog.imageURL, raw: "" });
 
-  const [message, setMessage] = useState("");
-  const [severity, setSeverity] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
+  const data = useContext(MessageContext);
+  const { addMessage } = data;
 
   const [updateBlogState, setupdateBlogState] = useState(false);
-
-  let messageState = {
-    message,
-    setMessage,
-    severity,
-    setSeverity,
-    showMessage,
-    setShowMessage,
-  };
 
   // Data object passed while updating
   let blogfields = {
@@ -64,15 +50,9 @@ export default function UpdateBlog({ blog, blogid }) {
     console.log(blogfields);
     try {
       await db.collection("blogs").doc(blogid).set(blogfields, { merge: true });
-
-      setMessage(`Blog updated successfully`);
-      setSeverity("success");
-      setShowMessage(true);
+      addMessage(`Blog updated successfully`, "success");
     } catch (error) {
-      console.log(error);
-      setMessage(error.message);
-      setSeverity("error");
-      setShowMessage(true);
+      addMessage(error.message, "error");
     }
   };
 
@@ -105,14 +85,11 @@ export default function UpdateBlog({ blog, blogid }) {
             var progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log("Upload is " + progress + "% done");
-            if (progress == 100) setMessage(`Image uploaded`);
-            setSeverity("success");
-            setShowMessage(true);
+            if (progress == 100) addMessage(`Image uploaded`, "success");
           },
           (error) => {
-            setMessage(error.message);
-            setSeverity("error");
-            setShowMessage(true);
+            addMessage(error.message, "error");
+
             // A full list of error codes is available at
             // https://firebase.google.com/docs/storage/web/handle-errors
             switch (error.code) {
@@ -139,9 +116,7 @@ export default function UpdateBlog({ blog, blogid }) {
       }
       setupdateBlogState(true);
     } else {
-      setMessage("Please enter all the fields");
-      setSeverity("warning");
-      setShowMessage(true);
+      addMessage("Please enter all the fields", "warning");
     }
   };
 
@@ -151,7 +126,6 @@ export default function UpdateBlog({ blog, blogid }) {
       <BlogEditor
         inputState={blogInfo}
         inputSetState={setBlogInfo}
-        messageState={messageState}
         submitDetails={submitDetails}
         setImage={setImage}
         image={image}

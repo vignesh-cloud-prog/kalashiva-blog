@@ -1,10 +1,12 @@
 import "../styles/globals.css";
 import Share from "../components/Main/share";
 import Navbar from "../components/layout/navbar";
+import Alerts from "../components/Main/alerts";
 import { auth } from "../firebase/firebase";
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import {ShareContextProvider} from "../store/share_context";
+import { MessageContextProvider } from "../store/message_context";
 // import TimeAgo from "javascript-time-ago";
 
 // import en from "javascript-time-ago/locale/en";
@@ -24,7 +26,9 @@ function MyApp({ Component, pageProps }) {
   }, []);
   return (
     <>
+    <MessageContextProvider>
     <ShareContextProvider>
+      
       <Head>
         <title>kaalashiva</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -40,8 +44,10 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <Navbar user={user} />
       <Component {...pageProps} user={user} />
+      <Alerts/>
       <Share />
       </ShareContextProvider>
+      </MessageContextProvider>
     </>
   );
 }
