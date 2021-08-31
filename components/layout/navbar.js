@@ -34,7 +34,7 @@ export default function Navbar({ user }) {
           <Avatar
             alt="Kaalashiva"
             variant="rounded"
-            src="https://image.shutterstock.com/image-photo/adiyogi-lord-shiva-statue-isha-260nw-1886897623.jpg"
+            src="/kaalashiva.jpg"
             className={navClass.menuButton}
           />
           <Typography variant="h6" className={navClass.title}>

@@ -97,7 +97,7 @@ export default function BlogDetails({ blogDetails,blogBody, user, allComments })
       <h5>created on - {new Date(blogDetails.createdAt).toDateString()}</h5>
       <Image
         width="90vw"
-        height="50vh"
+        height="200"
         layout="responsive"
         src={blogDetails.imageURL}
         alt="image"

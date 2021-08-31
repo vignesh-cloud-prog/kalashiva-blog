@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import BookmarkOutlinedIcon from "@material-ui/icons/BookmarkOutlined";
 import LibraryAddCheckIcon from "@material-ui/icons/LibraryAddCheck";
 import Link from "next/link";
+import Image from "next/image";
 import useStyles from "../../styles/usestyles";
 import ReactTimeAgo from "react-time-ago";
 
@@ -103,7 +104,7 @@ export default function BlogCard({
         subheader={<ReactTimeAgo date={createdAt} locale="en-US" />}
       />
 
-      <CardMedia className={classes.media} image={image} height="140" component="img" />
+      <CardMedia><Image src={image} alt="rhumbnail" height="150" width="100%"/></CardMedia>
 
       <Link href={`/${category}/${id}`}>
         <a>

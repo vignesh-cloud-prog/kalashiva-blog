@@ -54,13 +54,14 @@ function Slider({ featuredBlogs }) {
               <div>
                 <Card>
                   <CardActionArea>
-                    <CardMedia
-                      className={classes.media}
-                      image={step.imageURL}
-                      title="Contemplative Reptile"
-                      height="160"
-                      component="img"
-                    />
+                    <CardMedia className={classes.media}>
+                      <Image
+                        src={step.imageURL}
+                        alt="rhumbnail"
+                        height="200"
+                        width="100%"
+                      />
+                    </CardMedia>
                     <Link href={`${step.category}/${step.id}`}>
                       <a>
                         <CardContent>
