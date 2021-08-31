@@ -3,7 +3,7 @@ import styles from "../styles/Home.module.css";
 import Link from "next/link";
 
 // React related
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Matrial Ui components
 import {
@@ -23,8 +23,12 @@ import BlogCard from "../components/Blog/BlogCard";
 
 // Firebase related import
 import { db } from "../firebase/firebase";
+import {
+  getUserCollection,
+  getUserReadLater,
+} from "../components/helperFunc/userData";
 
-export default function Home({ allBlogs, featuredBlogs, user }) {
+export default function Home({ allBlogs, featuredBlogs, user}) {
   // Checking email for admin to provide extra functionality
   let userEmail;
   if (user != null) userEmail = user["email"];
@@ -73,6 +77,7 @@ export default function Home({ allBlogs, featuredBlogs, user }) {
             {blogs.map((blog) => (
               <Grid item xs={12} md={6} lg={3} key={blog.id}>
                 <BlogCard
+                  user={user}
                   image={blog?.imageURL}
                   title={blog?.title}
                   slug={blog?.slug}
@@ -80,6 +85,7 @@ export default function Home({ allBlogs, featuredBlogs, user }) {
                   id={blog?.id}
                   category={blog?.category}
                   createdAt={blog?.createdAt}
+                  
                 />
               </Grid>
             ))}
@@ -139,8 +145,6 @@ export default function Home({ allBlogs, featuredBlogs, user }) {
     </Main>
   );
 }
-
-
 
 // This gets called on every request
 export async function getStaticProps() {

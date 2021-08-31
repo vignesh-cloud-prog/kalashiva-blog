@@ -9,7 +9,7 @@ import { Container, Grid, Typography } from "@material-ui/core";
 import { db } from "../../firebase/firebase";
 import { useContext } from "react";
 
-export default function Categories({ blogs, category, featuredBlogs }) {
+export default function Categories({ blogs, category, featuredBlogs,user }) {
   return (
     <Main featuredBlogs={featuredBlogs}>
       <h1>{`${category}`}</h1>
@@ -18,6 +18,7 @@ export default function Categories({ blogs, category, featuredBlogs }) {
           {blogs.map((blog) => (
             <Grid item xs={12} md={6} lg={3} key={blog.id}>
               <BlogCard
+              user={user}
                 image={blog?.imageURL}
                 title={blog?.title}
                 slug={blog?.slug}
