@@ -9,7 +9,7 @@ import { Container, Grid, Typography } from "@material-ui/core";
 import { db } from "../../firebase/firebase";
 import { useContext } from "react";
 
-export default function Categories({ blogs, category, featuredBlogs,user }) {
+export default function Categories({ blogs, category, featuredBlogs, user }) {
   return (
     <Main featuredBlogs={featuredBlogs}>
       <h1>{`${category}`}</h1>
@@ -18,7 +18,7 @@ export default function Categories({ blogs, category, featuredBlogs,user }) {
           {blogs.map((blog) => (
             <Grid item xs={12} md={6} lg={3} key={blog.id}>
               <BlogCard
-              user={user}
+                user={user}
                 image={blog?.imageURL}
                 title={blog?.title}
                 slug={blog?.slug}
@@ -37,32 +37,16 @@ export default function Categories({ blogs, category, featuredBlogs,user }) {
   );
 }
 
-export async function getStaticPaths() {
-  // Call an external API endpoint to get posts by category
 
-  const querySnap = await db.collection("blogs").get();
-  const posts = querySnap.docs.map((docSnap) => {
-    return {
-      ...docSnap.data(),
-      id: docSnap.id,
-    };
-  });
-  // Get the paths we want to pre-render based on posts
-  const paths = posts.map((post) => ({
-    params: { category: post.category },
-  }));
-
-  // We'll pre-render only these paths at build time.
-  // { fallback: false } means other routes should 404.
-  return { paths, fallback: false };
-}
-
-export async function getStaticProps({ params: { category } }) {
+export async function getServerSideProps({ params: { category } }) {
   // Create a reference to the blogs collection
-  const allBlogs = db.collection("blogs");
+  const allBlogs = db.collection("blogdetails");
 
   // Create a query against the collection
-  const blogsSnap = await allBlogs.where("category", "==", category).get();
+  const blogsSnap = await allBlogs
+    .where("published", "==", true)
+    .where("category", "==", category)
+    .get();
 
   // Create blogs array
   const blogs = blogsSnap.docs.map((docSnap) => {
@@ -75,7 +59,8 @@ export async function getStaticProps({ params: { category } }) {
 
   // Getting Featured blogs
   const blogSnap = await db
-    .collection("blogs")
+    .collection("blogdetails")
+    .where("published", "==", true)
     .where("featured", "==", true)
     .limit(5)
     .get();
@@ -88,9 +73,6 @@ export async function getStaticProps({ params: { category } }) {
   });
 
   return {
-    props: { blogs, category, featuredBlogs }, // will be passed to the page component as props
-    // Re-generate the post at most once per second
-    // if a request comes in
-    revalidate: 1,
+    props: { blogs, category, featuredBlogs }
   };
 }
