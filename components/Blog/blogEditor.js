@@ -48,6 +48,7 @@ export default function BlogEditor({
       <Container width="md">
         <FormControl fullWidth>
           <TextField
+          margin="normal"
             required
             className={classes.field}
             type="text"
@@ -60,6 +61,7 @@ export default function BlogEditor({
             }
           />
           <TextField
+          margin="normal"
             required
             className={classes.field}
             type="text"
@@ -94,6 +96,7 @@ export default function BlogEditor({
           ) : null}
           <TextField
             required
+            margin="normal"
             className={classes.field}
             multiline
             rows={2}
@@ -106,7 +109,7 @@ export default function BlogEditor({
             }
           />
           <FormControl variant="outlined">
-            <InputLabel id="cate" required>
+            <InputLabel margin="normal"  id="cate" required>
               Category
             </InputLabel>
 
@@ -126,8 +129,10 @@ export default function BlogEditor({
             </Select>
           </FormControl>
           <FormControlLabel
+          
             control={
               <Switch
+              
                 color="primary"
                 checked={featured}
                 name="featured"

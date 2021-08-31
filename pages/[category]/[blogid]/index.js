@@ -1,6 +1,6 @@
 // React related
 
-import { useEffect, useState,useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 
 // Next related
 import Head from "next/head";
@@ -27,11 +27,15 @@ import { Send } from "@material-ui/icons";
 import MessageContext from "../../../store/message_context";
 
 // Firebase
-import { db, serverTimeStamp,increment } from "../../../firebase/firebase";
+import { db, serverTimeStamp, increment } from "../../../firebase/firebase";
 import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
 
-export default function BlogDetails({ blogDetails,blogBody, user, allComments }) {
-
+export default function BlogDetails({
+  blogDetails,
+  blogBody,
+  user,
+  allComments,
+}) {
   // Checking Amin for providing special functionality
   let userEmail;
   if (user != null) userEmail = user["email"];
@@ -40,8 +44,8 @@ export default function BlogDetails({ blogDetails,blogBody, user, allComments })
   const [comment, setComment] = useState("");
   const [comments, setAllComments] = useState(allComments);
 
-  const data = useContext(MessageContext)
-  const {addMessage}=data
+  const data = useContext(MessageContext);
+  const { addMessage } = data;
 
   const router = useRouter();
   const { blogid, category } = router.query;
@@ -55,37 +59,40 @@ export default function BlogDetails({ blogDetails,blogBody, user, allComments })
   };
 
   useEffect(() => {
-    incrementViewCount()
-  }, [])
+    incrementViewCount();
+  }, []);
   const makeComment = async () => {
     // Function make comments by user related to post
     try {
-      await db.collection("blogdetails").doc(blogid).collection("comments").add({
-        text: comment,
-        name: user.displayName,
-        commentedAt:serverTimeStamp(),
-        photo: user.photoURL,
-      });
+      await db
+        .collection("blogdetails")
+        .doc(blogid)
+        .collection("comments")
+        .add({
+          text: comment,
+          name: user.displayName,
+          commentedAt: serverTimeStamp(),
+          photo: user.photoURL,
+        });
       const commentQuery = await db
         .collection("blogdetails")
         .doc(blogid)
         .collection("comments")
         .get();
-      setAllComments(commentQuery.docs.map((docSnap) => ({
-
-        ...docSnap.data(),
-        commentedAt:docSnap.data().commentedAt.toMillis(),
-        id: docSnap.id,
-      })));
-      addMessage(`Your comment added`,"success")
-      
+      setAllComments(
+        commentQuery.docs.map((docSnap) => ({
+          ...docSnap.data(),
+          commentedAt: docSnap.data().commentedAt.toMillis(),
+          id: docSnap.id,
+        }))
+      );
+      addMessage(`Your comment added`, "success");
     } catch (error) {
-      addMessage(error.message,"error")
-      
+      addMessage(error.message, "error");
     }
     setComment("");
   };
-  
+
   return (
     <Container>
       <Head>
@@ -97,7 +104,7 @@ export default function BlogDetails({ blogDetails,blogBody, user, allComments })
       <h5>created on - {new Date(blogDetails.createdAt).toDateString()}</h5>
       <Image
         width="90vw"
-        height="200"
+        height="40rem"
         layout="responsive"
         src={blogDetails.imageURL}
         alt="image"
@@ -111,9 +118,9 @@ export default function BlogDetails({ blogDetails,blogBody, user, allComments })
             <Grid item>
               <Avatar alt={user?.displayName} src={user?.photoURL} />
             </Grid>
-            <Grid item>
+            <Grid item >
               <TextField
-                className="{classes.margin}"
+                fullWidth
                 id="input-with-icon-comment"
                 label="Comment"
                 value={comment}
@@ -165,7 +172,7 @@ export default function BlogDetails({ blogDetails,blogBody, user, allComments })
           })}
         </div>
       ) : (
-        <p>No comments at</p>
+        <p>No comments yet</p>
       )}
 
       {userEmail == "kaalashiva.kar@gmail.com" ? (
@@ -222,13 +229,11 @@ export async function getServerSideProps({ params: { blogid } }) {
     .doc(blogid)
     .collection("comments")
     .get();
-  const allComments = allCommetsSnap.docs.map((comDocSnap) =>({
-
+  const allComments = allCommetsSnap.docs.map((comDocSnap) => ({
     ...comDocSnap.data(),
-    commentedAt:comDocSnap.data().commentedAt.toMillis(),
+    commentedAt: comDocSnap.data().commentedAt.toMillis(),
     id: comDocSnap.id,
-  })
-  );
+  }));
 
   // Pass data to the page via props
   return {
@@ -237,8 +242,8 @@ export async function getServerSideProps({ params: { blogid } }) {
         ...blogDeatails.data(),
         createdAt: blogDeatails.data().createdAt.toMillis(),
       },
-      blogBody:blogBody.data(),
+      blogBody: blogBody.data(),
       allComments,
-    }
+    },
   };
 }
