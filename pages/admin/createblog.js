@@ -10,6 +10,7 @@ export default function CreateBlog({ user }) {
   const classes = useStyles();
   const [blogInfo, setBlogInfo] = useState({
     title: "",
+    slug:"",
     desc: "",
     category: "",
     featured: false,
@@ -29,6 +30,7 @@ export default function CreateBlog({ user }) {
       const blogdata = {
         id: blogid,
         title: blogInfo.title,
+        slug:blogInfo.slug,
         desc: blogInfo.desc,
         category: blogInfo.category,
         featured: blogInfo.featured,

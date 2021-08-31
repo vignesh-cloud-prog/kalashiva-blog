@@ -17,9 +17,9 @@ import MessageContext from "../../../store/message_context";
 import { Container } from "@material-ui/core";
 
 export default function UpdateBlog({ blog, resultBody, blogid }) {
- 
   const [blogInfo, setBlogInfo] = useState({
     title: blog.title,
+    slug:blog.slug,
     desc: blog.desc,
     category: blog.category,
     featured: blog.featured,
@@ -38,6 +38,7 @@ export default function UpdateBlog({ blog, resultBody, blogid }) {
   // Data object passed while updating
   let blogfields = {
     title: blogInfo.title,
+    slug: blogInfo.slug,
     desc: blogInfo.desc,
     category: blogInfo.category,
     featured: blogInfo.featured,
@@ -62,7 +63,7 @@ export default function UpdateBlog({ blog, resultBody, blogid }) {
       .set({ blogBody }, { merge: true })
       .then(() => {
         addMessage(`Blog body updated`, "success");
-        router.push(`/${blogInfo.category}/${blogid}`)
+        router.push(`/${blogInfo.category}/${blogid}`);
       })
       .catch((error) => {
         addMessage(error.message, "error");

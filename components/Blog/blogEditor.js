@@ -40,7 +40,8 @@ export default function BlogEditor({
 
   const data = useContext(MessageContext);
   const { addMessage } = data;
-  const { featured, category, desc, url, body, title, published } = inputState;
+  const { featured, category, desc, url, body, title, slug, published } =
+    inputState;
 
   return (
     <div>
@@ -56,6 +57,18 @@ export default function BlogEditor({
             name="title"
             onChange={(e) =>
               inputSetState({ ...inputState, title: e.target.value })
+            }
+          />
+          <TextField
+            required
+            className={classes.field}
+            type="text"
+            label="Slug"
+            variant="outlined"
+            value={slug}
+            name="slug"
+            onChange={(e) =>
+              inputSetState({ ...inputState, slug: e.target.value })
             }
           />
           <label htmlFor="upload-photo">
@@ -161,10 +174,11 @@ export default function BlogEditor({
                 variant="contained"
                 color="secondary"
                 onClick={() => {
-                 let removed = removeBlog(blogId);
-                 router.push("/")
-                  if (removed) return addMessage("Blog deleted", "success");
-
+                  if (confirm("Are you sure do you want delete the blog")) {
+                    let removed = removeBlog(blogId);
+                    router.push("/");
+                    if (removed) return addMessage("Blog deleted", "success");
+                  }
                 }}
               >
                 delete
