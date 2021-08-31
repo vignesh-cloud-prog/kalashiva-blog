@@ -19,7 +19,6 @@ import sliderStyles from "../../styles/sliderStyles";
 import Link from "next/link";
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-
 function Slider({ featuredBlogs }) {
   const classes = sliderStyles();
   const theme = useTheme();
@@ -39,7 +38,7 @@ function Slider({ featuredBlogs }) {
   };
 
   return (
-    <div className={classes.root} >
+    <div className={classes.root}>
       {/* <Paper square elevation={0} className={classes.header}>
         <Typography>{featuredBlogs[activeStep]?.title}</Typography>
       </Paper> */}
@@ -53,24 +52,25 @@ function Slider({ featuredBlogs }) {
           <div key={step.id}>
             {Math.abs(activeStep - index) <= 2 ? (
               <div>
-                <Card >
+                <Card>
                   <CardActionArea>
                     <CardMedia
                       className={classes.media}
                       image={step.imageURL}
                       title="Contemplative Reptile"
+                      height="160"
+                      component="img"
                     />
                     <Link href={`${step.category}/${step.id}`}>
-                    <a >
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="h2">
-                        {step.title}
-                      </Typography>
-                    </CardContent>
-                    </a>
+                      <a>
+                        <CardContent>
+                          <Typography gutterBottom variant="h5" component="h2">
+                            {step.title}
+                          </Typography>
+                        </CardContent>
+                      </a>
                     </Link>
                   </CardActionArea>
-                  
                 </Card>
               </div>
             ) : null}

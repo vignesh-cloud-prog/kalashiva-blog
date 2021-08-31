@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useContext } from "react";
 
 // Next related
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 
 // Components
 import BlogEditor from "../../../components/Blog/blogEditor";
@@ -14,11 +14,12 @@ import { v4 as uuidv4 } from "uuid";
 import { db, serverTimeStamp, storage } from "../../../firebase/firebase";
 
 import MessageContext from "../../../store/message_context";
+import { Container } from "@material-ui/core";
 
-export default function UpdateBlog({ blog, blogid }) {
+export default function UpdateBlog({ blog, resultBody, blogid }) {
+ 
   const [blogInfo, setBlogInfo] = useState({
     title: blog.title,
-
     desc: blog.desc,
     category: blog.category,
     featured: blog.featured,
@@ -26,7 +27,7 @@ export default function UpdateBlog({ blog, blogid }) {
     published: blog.published,
   });
 
-  const [blogBody, setBlogBody] = useState(blog.body);
+  const [blogBody, setBlogBody] = useState(resultBody.blogBody);
   const [image, setImage] = useState({ preview: blog.imageURL, raw: "" });
 
   const data = useContext(MessageContext);
@@ -37,23 +38,35 @@ export default function UpdateBlog({ blog, blogid }) {
   // Data object passed while updating
   let blogfields = {
     title: blogInfo.title,
-    body: blogBody,
     desc: blogInfo.desc,
     category: blogInfo.category,
     featured: blogInfo.featured,
     published: blogInfo.published,
     imageURL: image.preview,
+    createdAt: serverTimeStamp(),
   };
 
   // This fuction updates the blog
   const updateBlog = async () => {
-    console.log(blogfields);
-    try {
-      await db.collection("blogs").doc(blogid).set(blogfields, { merge: true });
-      addMessage(`Blog updated successfully`, "success");
-    } catch (error) {
-      addMessage(error.message, "error");
-    }
+    db.collection("blogdetails")
+      .doc(blogid)
+      .set(blogfields, { merge: true })
+      .then(() => {
+        addMessage(`Blog details updated`, "success");
+      })
+      .catch((error) => {
+        addMessage(error.message, "error");
+      });
+    db.collection("blogbody")
+      .doc(blogid)
+      .set({ blogBody }, { merge: true })
+      .then(() => {
+        addMessage(`Blog body updated`, "success");
+        router.push(`/${blogInfo.category}/${blogid}`)
+      })
+      .catch((error) => {
+        addMessage(error.message, "error");
+      });
   };
 
   useEffect(() => {
@@ -68,9 +81,7 @@ export default function UpdateBlog({ blog, blogid }) {
   }, [updateBlogState, blogInfo.url]);
 
   // Handling the blog submit update
-  const submitDetails = (e) => {
-    e.preventDefault();
-
+  const submitDetails = (onemore) => {
     if (blogInfo.title != "" && blogBody != "") {
       // If new thumb image then upload it firebase storage
       if (image.raw) {
@@ -121,7 +132,7 @@ export default function UpdateBlog({ blog, blogid }) {
   };
 
   return (
-    <div>
+    <Container>
       <h1>Blog update page</h1>
       <BlogEditor
         inputState={blogInfo}
@@ -131,20 +142,25 @@ export default function UpdateBlog({ blog, blogid }) {
         image={image}
         setBlogBody={setBlogBody}
         blogBody={blogBody}
+        name="update"
+        update={true}
+        blogId={blogid}
       ></BlogEditor>
-    </div>
+    </Container>
   );
 }
 
 export async function getServerSideProps({ params: { blogid } }) {
   // Create a reference to the blogsF collection
-  const result = await db.collection("blogs").doc(blogid).get();
+  const result = await db.collection("blogdetails").doc(blogid).get();
+  const resultBody = await db.collection("blogbody").doc(blogid).get();
   return {
     props: {
       blog: {
         ...result.data(),
         createdAt: result.data().createdAt.toMillis(),
       },
+      resultBody: resultBody.data(),
       blogid,
     }, // will be passed to the page component as props
   };

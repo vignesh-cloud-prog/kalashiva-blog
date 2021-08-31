@@ -11,13 +11,9 @@ import LibraryAddCheckIcon from "@material-ui/icons/LibraryAddCheck";
 import Link from "next/link";
 import useStyles from "../../styles/usestyles";
 import ReactTimeAgo from "react-time-ago";
-import TimeAgo from "javascript-time-ago";
 
-import en from "javascript-time-ago/locale/en";
-import ru from "javascript-time-ago/locale/ru";
 
-TimeAgo.addDefaultLocale(en);
-TimeAgo.addLocale(ru);
+
 import { Button, Grid } from "@material-ui/core";
 import {
   BookmarkBorderOutlined,
@@ -107,7 +103,7 @@ export default function BlogCard({
         subheader={<ReactTimeAgo date={createdAt} locale="en-US" />}
       />
 
-      <CardMedia className={classes.media} image={image} />
+      <CardMedia className={classes.media} image={image} height="140" component="img" />
 
       <Link href={`/${category}/${id}`}>
         <a>

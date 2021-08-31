@@ -28,8 +28,10 @@ import MessageContext from "../../../store/message_context";
 
 // Firebase
 import { db, serverTimeStamp,increment } from "../../../firebase/firebase";
+import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
 
-export default function BlogDetails({ blog, user, allComments }) {
+export default function BlogDetails({ blogDetails,blogBody, user, allComments }) {
+
   // Checking Amin for providing special functionality
   let userEmail;
   if (user != null) userEmail = user["email"];
@@ -46,7 +48,7 @@ export default function BlogDetails({ blog, user, allComments }) {
 
   const incrementViewCount = () => {
     // Document reference
-    const blogRef = db.collection("blogs").doc(blogid);
+    const blogRef = db.collection("blogdetails").doc(blogid);
 
     // Update read count
     blogRef.update({ viewCount: increment });
@@ -58,21 +60,27 @@ export default function BlogDetails({ blog, user, allComments }) {
   const makeComment = async () => {
     // Function make comments by user related to post
     try {
-      await db.collection("blogs").doc(blogid).collection("comments").add({
+      await db.collection("blogdetails").doc(blogid).collection("comments").add({
         text: comment,
         name: user.displayName,
+        commentedAt:serverTimeStamp(),
         photo: user.photoURL,
       });
       const commentQuery = await db
-        .collection("blogs")
+        .collection("blogdetails")
         .doc(blogid)
         .collection("comments")
         .get();
-      setAllComments(commentQuery.docs.map((docSnap) => docSnap.data()));
+      setAllComments(commentQuery.docs.map((docSnap) => ({
+
+        ...docSnap.data(),
+        commentedAt:docSnap.data().commentedAt.toMillis(),
+        id: docSnap.id,
+      })));
       addMessage(`Your comment added`,"success")
       
     } catch (error) {
-      addMessage(err.message,"error")
+      addMessage(error.message,"error")
       
     }
     setComment("");
@@ -81,21 +89,21 @@ export default function BlogDetails({ blog, user, allComments }) {
   return (
     <Container>
       <Head>
-        <title>{`${blog.title} | kaalashiva`}</title>
+        <title>{`${blogDetails.title} | kaalashiva`}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta name="description" content={`${blog.desc}`} />
+        <meta name="description" content={`${blogDetails.desc}`} />
       </Head>
-      <h1>{blog.title}</h1>
-      <h5>created on - {new Date(blog.createdAt).toDateString()}</h5>
+      <h1>{blogDetails.title}</h1>
+      <h5>created on - {new Date(blogDetails.createdAt).toDateString()}</h5>
       <Image
-        width="90vh"
-        height="30vw"
+        width="90vw"
+        height="50vh"
         layout="responsive"
-        src={blog.imageURL}
+        src={blogDetails.imageURL}
         alt="image"
       />
 
-      <div dangerouslySetInnerHTML={{ __html: blog.body }}></div>
+      <div dangerouslySetInnerHTML={{ __html: blogBody.blogBody }}></div>
       <Typography variant="h5">Comments</Typography>
       {user ? (
         <>
@@ -140,14 +148,14 @@ export default function BlogDetails({ blog, user, allComments }) {
           {comments.map((cmt) => {
             return (
               <>
-                <Grid container spacing={1} alignItems="flex-end" key={cmt?.at}>
+                <Grid container spacing={1} alignItems="flex-end" key={cmt.id}>
                   <Grid item style={{ margin: "0.5rem" }}>
                     <Avatar alt={user?.name} src={cmt?.photo} />
                   </Grid>
                   <Grid item style={{ margin: "0.5rem" }}>
                     <Typography variant="h6">
                       {cmt?.name}
-                      {/* <ReactTimeAgo date={cmt?.at} locale="en-US" /> */}
+                      <ReactTimeAgo date={cmt?.commentedAt} locale="en-US" />
                     </Typography>
                     <Typography variant="body1">{cmt?.text}</Typography>
                   </Grid>
@@ -181,54 +189,56 @@ export default function BlogDetails({ blog, user, allComments }) {
   );
 }
 
-// This function gets called at build time
-export async function getStaticPaths() {
-  // Call an external API endpoint to get posts
+// // This function gets called at build time
+// export async function getStaticPaths() {
+//   // Call an external API endpoint to get posts
 
-  const querySnap = await db.collection("blogs").get();
-  const posts = querySnap.docs.map((docSnap) => {
-    return {
-      ...docSnap.data(),
-      id: docSnap.id,
-    };
-  });
-  // Get the paths we want to pre-render based on posts
-  const paths = posts.map((post) => ({
-    params: { category: post.category, blogid: post.id },
-  }));
+//   const querySnap = await db.collection("blogs").get();
+//   const posts = querySnap.docs.map((docSnap) => {
+//     return {
+//       ...docSnap.data(),
+//       id: docSnap.id,
+//     };
+//   });
+//   // Get the paths we want to pre-render based on posts
+//   const paths = posts.map((post) => ({
+//     params: { category: post.category, blogid: post.id },
+//   }));
 
-  // We'll pre-render only these paths at build time.
-  // { fallback: false } means other routes should 404.
-  return { paths, fallback: false };
-}
+//   // We'll pre-render only these paths at build time.
+//   // { fallback: false } means other routes should 404.
+//   return { paths, fallback: false };
+// }
 
 // This gets called on every request
-export async function getStaticProps({ params: { blogid } }) {
+export async function getServerSideProps({ params: { blogid } }) {
   // Fetch data from external API
-  const result = await db.collection("blogs").doc(blogid).get();
-  // console.log(result.data());
+  const blogDeatails = await db.collection("blogdetails").doc(blogid).get();
+  const blogBody = await db.collection("blogbody").doc(blogid).get();
+  // console.log(blogDeatails.data());
   // comments
   const allCommetsSnap = await db
-    .collection("blogs")
+    .collection("blogdetails")
     .doc(blogid)
     .collection("comments")
     .get();
-  const allComments = allCommetsSnap.docs.map((comDocSnap) =>
-    comDocSnap.data()
+  const allComments = allCommetsSnap.docs.map((comDocSnap) =>({
+
+    ...comDocSnap.data(),
+    commentedAt:comDocSnap.data().commentedAt.toMillis(),
+    id: comDocSnap.id,
+  })
   );
 
   // Pass data to the page via props
   return {
     props: {
-      blog: {
-        ...result.data(),
-        createdAt: result.data().createdAt.toMillis(),
+      blogDetails: {
+        ...blogDeatails.data(),
+        createdAt: blogDeatails.data().createdAt.toMillis(),
       },
+      blogBody:blogBody.data(),
       allComments,
-    },
-
-    // Re-generate the post at most once per second
-    // if a request comes in
-    revalidate: 1,
+    }
   };
 }

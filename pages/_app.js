@@ -13,13 +13,13 @@ import {
   getUserReadLater,
 } from "../components/helperFunc/userData";
 import { UserContextProvider } from "../store/user_context";
-// import TimeAgo from "javascript-time-ago";
+import TimeAgo from "javascript-time-ago";
 
-// import en from "javascript-time-ago/locale/en";
-// import ru from "javascript-time-ago/locale/ru";
+import en from "javascript-time-ago/locale/en";
 
-// TimeAgo.addDefaultLocale(en);
-// TimeAgo.addLocale(ru);
+
+TimeAgo.addDefaultLocale(en);
+
 
 function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(null);

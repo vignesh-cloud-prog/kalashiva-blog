@@ -23,12 +23,9 @@ import BlogCard from "../components/Blog/BlogCard";
 
 // Firebase related import
 import { db } from "../firebase/firebase";
-import {
-  getUserCollection,
-  getUserReadLater,
-} from "../components/helperFunc/userData";
 
-export default function Home({ allBlogs, featuredBlogs, user}) {
+
+export default function Home({ allBlogs, featuredBlogs, user }) {
   // Checking email for admin to provide extra functionality
   let userEmail;
   if (user != null) userEmail = user["email"];
@@ -85,7 +82,6 @@ export default function Home({ allBlogs, featuredBlogs, user}) {
                   id={blog?.id}
                   category={blog?.category}
                   createdAt={blog?.createdAt}
-                  
                 />
               </Grid>
             ))}
@@ -147,13 +143,12 @@ export default function Home({ allBlogs, featuredBlogs, user}) {
 }
 
 // This gets called on every request
-export async function getStaticProps() {
-  // Generation of static page
+export async function getServerSideProps() {
   // Fetch data from external API
 
   // Fetching Recent blogs for
   const querySnap = await db
-    .collection("blogs")
+    .collection("blogdetails")
     .where("published", "==", true)
     .orderBy("createdAt", "desc")
     .limit(4)
@@ -166,9 +161,25 @@ export async function getStaticProps() {
     };
   });
 
+  // Fetching Recent blogs for
+  const topQuerySnap = await db
+    .collection("blogdetails")
+    .where("published", "==", true)
+    .orderBy("viewCount")
+    .limit(4)
+    .get();
+  const topBlogs = topQuerySnap.docs.map((docSnap) => {
+    return {
+      ...docSnap.data(),
+      createdAt: docSnap.data().createdAt.toMillis(),
+      id: docSnap.id,
+    };
+  });
+
   // Fetching Featured Blogs
   const blogSnap = await db
-    .collection("blogs")
+    .collection("blogdetails")
+    .where("published", "==", true)
     .where("featured", "==", true)
     .limit(5)
     .get();
@@ -181,9 +192,6 @@ export async function getStaticProps() {
   });
   // Pass data to the page via props
   return {
-    props: { allBlogs, featuredBlogs },
-    // Re-generate the post at most once per second
-    // if a request comes in
-    revalidate: 1,
+    props: { allBlogs, featuredBlogs, topBlogs },
   };
 }
