@@ -103,8 +103,7 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
       <div style={{ position: "relative", height: "10rem", width: "100%", margin:"auto" }}>
         <Image  layout="fill" src={blogDetails.imageURL} alt="image" />
       </div>
-
-      <div dangerouslySetInnerHTML={{ __html: blogBody.blogBody }}></div>
+      <div onCopy={(e)=>{e.preventDefault(); return false}} onCut={(e)=>{e.preventDefault(); return false}}dangerouslySetInnerHTML={{ __html: blogBody.blogBody }}></div>
       <Typography variant="h5">{`Comments(${comments?.length})`}</Typography>
       {user ? (
         <>
