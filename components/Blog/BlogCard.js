@@ -105,23 +105,13 @@ export default function BlogCard({
       <CardMedia
         style={{ position: "relative", height: "10rem", width: "100%" }}
       >
-        <Image
-          src={image}
-          alt="rhumbnail"
-         
-          layout="fill"
-        />
+        <Image src={image} alt="rhumbnail" layout="fill" />
       </CardMedia>
 
       <Link href={`/${category}/${id}`}>
         <a>
           <CardContent>
-            <Typography
-              noWrap
-              variant="body2"
-              color="textSecondary"
-              component="p"
-            >
+            <Typography noWrap variant="body1" color="textSecondary">
               {desc} <Typography variant="body2">Read more</Typography>
             </Typography>
           </CardContent>

@@ -17,6 +17,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import sliderStyles from "../../styles/sliderStyles";
 import Link from "next/link";
+import { CardHeader } from "@material-ui/core";
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 function Slider({ featuredBlogs }) {
@@ -54,18 +55,22 @@ function Slider({ featuredBlogs }) {
               <div>
                 <Card>
                   <CardActionArea>
-                    <CardMedia className={classes.media}>
-                      <Image
-                        src={step.imageURL}
-                        alt="rhumbnail"
-                       layout="fill"
-                      />
-                    </CardMedia>
                     <Link href={`${step.category}/${step.id}`}>
                       <a>
+                        <CardMedia className={classes.media}>
+                          <Image
+                            src={step.imageURL}
+                            alt="rhumbnail"
+                            layout="fill"
+                          />
+                        </CardMedia>
+
                         <CardContent>
                           <Typography gutterBottom variant="h5" component="h2">
                             {step.title}
+                          </Typography>
+                          <Typography gutterBottom variant="body2" noWrap>
+                            {step.desc}
                           </Typography>
                         </CardContent>
                       </a>

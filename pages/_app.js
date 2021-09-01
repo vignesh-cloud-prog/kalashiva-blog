@@ -22,21 +22,6 @@ TimeAgo.addDefaultLocale(en);
 
 
 function MyApp({ Component, pageProps }) {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-     // Remove the server-side injected CSS.
-     const jssStyles = document.querySelector("#jss-server-side");
-     if (jssStyles) {
-       jssStyles.parentElement.removeChild(jssStyles);
-     }
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user);
-      } else setUser(null);
-    });
-  }, []);
-
 
   return (
     <>
@@ -59,8 +44,8 @@ function MyApp({ Component, pageProps }) {
                 content="kannada, kaalashiva, blog, story, article"
               />
             </Head>
-            <Navbar user={user} />
-            <Component {...pageProps} user={user} />
+            <Navbar/>
+            <Component {...pageProps}  />
             <Alerts />
             <Share />
           </UserContextProvider>

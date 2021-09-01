@@ -13,6 +13,7 @@ import {
   Avatar,
   Container,
   Fab,
+  FormGroup,
   Grid,
   IconButton,
   InputAdornment,
@@ -25,18 +26,15 @@ import { Send } from "@material-ui/icons";
 
 // Components
 import MessageContext from "../../../store/message_context";
-
+import UserContext from "../../../store/user_context";
 // Firebase
 import { db, serverTimeStamp, increment } from "../../../firebase/firebase";
 import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
 
-export default function BlogDetails({
-  blogDetails,
-  blogBody,
-  user,
-  allComments,
-}) {
+export default function BlogDetails({ blogDetails, blogBody, allComments }) {
   // Checking Amin for providing special functionality
+  const userContext = useContext(UserContext);
+  const { user } = userContext;
   let userEmail;
   if (user != null) userEmail = user["email"];
 
@@ -94,7 +92,7 @@ export default function BlogDetails({
   };
 
   return (
-    <Container>
+    <Container maxWidth="md">
       <Head>
         <title>{`${blogDetails.title} | kaalashiva`}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -102,24 +100,21 @@ export default function BlogDetails({
       </Head>
       <h1>{blogDetails.title}</h1>
       <h5>created on - {new Date(blogDetails.createdAt).toDateString()}</h5>
-      <Image
-        width="90vw"
-        height="40rem"
-        layout="responsive"
-        src={blogDetails.imageURL}
-        alt="image"
-      />
+      <div style={{ position: "relative", height: "10rem", width: "100%", margin:"auto" }}>
+        <Image  layout="fill" src={blogDetails.imageURL} alt="image" />
+      </div>
 
       <div dangerouslySetInnerHTML={{ __html: blogBody.blogBody }}></div>
-      <Typography variant="h5">Comments</Typography>
+      <Typography variant="h5">{`Comments(${comments?.length})`}</Typography>
       {user ? (
         <>
-          <Grid container spacing={1} alignItems="flex-end">
-            <Grid item>
+          <Grid container alignItems="flex-end" justifyContent="center">
+            <Grid container justifyContent="center"  md={1} xs={2}>
               <Avatar alt={user?.displayName} src={user?.photoURL} />
             </Grid>
-            <Grid item >
-              <TextField
+            <Grid item md={11} xs={10} >
+            
+            <TextField
                 fullWidth
                 id="input-with-icon-comment"
                 label="Comment"
@@ -138,6 +133,7 @@ export default function BlogDetails({
                   ),
                 }}
               />
+          
             </Grid>
           </Grid>
         </>
@@ -159,10 +155,14 @@ export default function BlogDetails({
                   <Grid item style={{ margin: "0.5rem" }}>
                     <Avatar alt={user?.name} src={cmt?.photo} />
                   </Grid>
-                  <Grid item style={{ margin: "0.5rem" }}>
+                  <Grid item >
+                    
                     <Typography variant="h6">
-                      {cmt?.name}
+                      {`${cmt?.name}  `}
+                      <small>
+
                       <ReactTimeAgo date={cmt?.commentedAt} locale="en-US" />
+                      </small>
                     </Typography>
                     <Typography variant="body1">{cmt?.text}</Typography>
                   </Grid>

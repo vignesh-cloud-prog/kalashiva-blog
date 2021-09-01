@@ -9,8 +9,11 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
+import UserContext from "../../store/user_context";
 
-export default function Navbar({ user }) {
+export default function Navbar() {
+  const userContext = useContext(UserContext);
+  const { user} = userContext;
   const navClass = navStyles();
 
  const data = useContext(MessageContext)
@@ -34,7 +37,7 @@ export default function Navbar({ user }) {
           <Avatar
             alt="Kaalashiva"
             variant="rounded"
-            src="/kaalashiva.jpg"
+            src="/kaalashiva.jpeg"
             className={navClass.menuButton}
           />
           <Typography variant="h6" className={navClass.title}>

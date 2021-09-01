@@ -3,7 +3,7 @@ import styles from "../styles/Home.module.css";
 import Link from "next/link";
 
 // React related
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 // Matrial Ui components
 import {
@@ -20,13 +20,16 @@ import homeStyles from "../styles/homeStyles";
 // Components
 import Main from "../components/layout/mainLayout";
 import BlogCard from "../components/Blog/BlogCard";
+import UserContext from "../store/user_context";
 
 // Firebase related import
 import { db } from "../firebase/firebase";
 
 
-export default function Home({ allBlogs, featuredBlogs, user }) {
+export default function Home({ allBlogs, featuredBlogs }) {
   // Checking email for admin to provide extra functionality
+  const userContext = useContext(UserContext);
+  const { user} = userContext;
   let userEmail;
   if (user != null) userEmail = user["email"];
 

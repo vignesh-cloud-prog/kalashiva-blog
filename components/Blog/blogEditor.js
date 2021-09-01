@@ -20,7 +20,8 @@ import { CKEditor } from "ckeditor4-react";
 import { removeBlog } from "../helperFunc/deleteBlog";
 
 import MessageContext from "../../store/message_context";
-import router from "next/router";
+import UserContext from "../../store/user_context";
+import { useRouter } from "next/router";
 
 export default function BlogEditor({
   name = "create",
@@ -34,6 +35,18 @@ export default function BlogEditor({
   update = false,
   blogId = null,
 }) {
+  const router = useRouter();
+
+  const userContext = useContext(UserContext);
+  const { user } = userContext;
+  useEffect(() => {
+    if (user) {
+      if (user["email"] !== "kaalashiva.kar@gmail.com") {
+        router.push("/");
+      }
+    } 
+  }, []);
+
   const categories = [
     "ಲೇಖನ",
     "ಕಥೆ",
@@ -53,6 +66,8 @@ export default function BlogEditor({
   const { featured, category, desc, url, body, title, slug, published } =
     inputState;
 
+  if (!user || user["email"] !== "kaalashiva.kar@gmail.com")
+    return <p>Loading...</p>;
   return (
     <div>
       <Container width="md">

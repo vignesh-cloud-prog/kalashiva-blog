@@ -4,13 +4,15 @@ import { db, serverTimeStamp, storage } from "../../firebase/firebase";
 import useStyles from "../../styles/usestyles";
 import BlogEditor from "../../components/Blog/blogEditor";
 import MessageContext from "../../store/message_context";
-import router from "next/router";
+import { useRouter } from 'next/router'
 
-export default function CreateBlog({ user }) {
+export default function CreateBlog() {
+  
+  const router = useRouter()
   const classes = useStyles();
   const [blogInfo, setBlogInfo] = useState({
     title: "",
-    slug:"",
+    slug: "",
     desc: "",
     category: "",
     featured: false,
@@ -30,7 +32,7 @@ export default function CreateBlog({ user }) {
       const blogdata = {
         id: blogid,
         title: blogInfo.title,
-        slug:blogInfo.slug,
+        slug: blogInfo.slug,
         desc: blogInfo.desc,
         category: blogInfo.category,
         featured: blogInfo.featured,
@@ -59,7 +61,7 @@ export default function CreateBlog({ user }) {
         .catch((error) => {
           addMessage(error.message, "error");
         });
-        router.push("/admin")
+      router.push("/admin");
       setBlogInfo({
         title: "",
         desc: "",
@@ -69,12 +71,10 @@ export default function CreateBlog({ user }) {
         published: false,
       });
       setBlogBody("");
-
     }
   }, [blogInfo.url]);
 
   const submitDetails = () => {
-    
     if (blogInfo.title && blogBody && image) {
       var uploadTask = storage.ref().child(`images/${uuidv4()}`).put(image.raw);
       uploadTask.on(
@@ -95,7 +95,6 @@ export default function CreateBlog({ user }) {
           });
         }
       );
-      
     } else {
       addMessage("Please enter all the fields", "warning");
     }

@@ -17,9 +17,11 @@ import MessageContext from "../../../store/message_context";
 import { Container } from "@material-ui/core";
 
 export default function UpdateBlog({ blog, resultBody, blogid }) {
+  
+
   const [blogInfo, setBlogInfo] = useState({
     title: blog.title,
-    slug:blog.slug,
+    slug: blog.slug,
     desc: blog.desc,
     category: blog.category,
     featured: blog.featured,
