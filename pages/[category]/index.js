@@ -31,7 +31,7 @@ export default function Categories({ blogs, category, featuredBlogs, user }) {
           ))}
         </Grid>
       ) : (
-        <Typography>{`no ${category} are available`}</Typography>
+        <Typography>{` ಯಾವುದೇ ${category} ಸಂಬಂಧಿತ ವಿಷಯಗಳು ಇಲ್ಲ`}</Typography>
       )}
     </Main>
   );

@@ -103,7 +103,7 @@ export default function BlogCard({
       />
 
       <CardMedia
-        style={{ position: "relative", height: "8rem", width: "100%" }}
+        style={{ position: "relative", height: "10rem", width: "100%" }}
       >
         <Image
           src={image}

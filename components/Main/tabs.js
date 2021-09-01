@@ -3,35 +3,48 @@ import React from "react";
 
 // Next
 import Link from "next/link";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 
 // Material ui
 import { Tab, Tabs, AppBar, Grid } from "@material-ui/core";
 import { BrandingWatermark, Home } from "@material-ui/icons";
 
 export default function HomeTabs() {
-  const router = useRouter()
-  const categories = ["ಲೇಖನ", "ಕಥೆ", "ಕವಿತೆ"];
-  const {category}=router.query
+  const router = useRouter();
+  const categories = [
+    "ಲೇಖನ",
+    "ಕಥೆ",
+    "ಕವಿತೆ",
+    "ಅಧ್ಯಾತ್ಮ",
+    "ಸುದ್ದಿ",
+    "ಕ್ರೀಡೆ",
+    "ತಂತ್ರಜ್ಞಾನ",
+    "ಸಿನೆಮಾ",
+  ];
+  const { category } = router.query;
   const [value, setValue] = React.useState(categories.indexOf(category));
 
   const handleChange = (event, newValue) => {
-    router.push(categories[newValue])
+    router.push(categories[newValue]);
     setValue(newValue);
   };
 
   return (
     <div>
-      <AppBar position="static" color="default" style={{ margin: "1rem 0" }}>
+      <AppBar position="static" color="default" style={{ display: "flex" }}>
         <Grid container>
-          <Grid item>
+          <Grid item xs={3} md={1}>
             <Link href="/">
               <a>
-                <Tab label="Home" icon={<Home />} style={{color:"#1a237e"}} />
+                <Tab
+                  label="Home"
+                  icon={<Home />}
+                  style={{ color: "#1a237e" }}
+                />
               </a>
             </Link>
           </Grid>
-          <Grid item>
+          <Grid container xs={9} md={11}>
             <Tabs
               value={value}
               onChange={handleChange}
@@ -44,11 +57,16 @@ export default function HomeTabs() {
               {categories.map((category) => (
                 // <Link href={`/${category}`} key={category}>
                 //   <a>
-                    <Tab key={category}
-                      label={category}
-                      icon={<BrandingWatermark style={{ fontSize: 20 }} 
-                      value={category} />}
+                <Tab
+                  key={category}
+                  label={category}
+                  icon={
+                    <BrandingWatermark
+                      style={{ fontSize: 20 }}
+                      value={category}
                     />
+                  }
+                />
                 //  </a>
                 // </Link>
               ))}
