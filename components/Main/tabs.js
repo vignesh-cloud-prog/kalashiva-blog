@@ -44,7 +44,7 @@ export default function HomeTabs() {
               </a>
             </Link>
           </Grid>
-          <Grid container xs={9} md={11}>
+          <Grid item xs={9} md={11}>
             <Tabs
               value={value}
               onChange={handleChange}

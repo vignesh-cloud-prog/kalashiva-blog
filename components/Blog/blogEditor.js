@@ -34,6 +34,16 @@ export default function BlogEditor({
   update = false,
   blogId = null,
 }) {
+  const categories = [
+    "ಲೇಖನ",
+    "ಕಥೆ",
+    "ಕವಿತೆ",
+    "ಅಧ್ಯಾತ್ಮ",
+    "ಸುದ್ದಿ",
+    "ಕ್ರೀಡೆ",
+    "ತಂತ್ರಜ್ಞಾನ",
+    "ಸಿನೆಮಾ",
+  ];
   // let editor= CKEDITOR.instances.blog_editor
   // editor.setData(blogBody)
   const classes = useStyles();
@@ -48,7 +58,7 @@ export default function BlogEditor({
       <Container width="md">
         <FormControl fullWidth>
           <TextField
-          margin="normal"
+            margin="normal"
             required
             className={classes.field}
             type="text"
@@ -61,7 +71,7 @@ export default function BlogEditor({
             }
           />
           <TextField
-          margin="normal"
+            margin="normal"
             required
             className={classes.field}
             type="text"
@@ -109,7 +119,7 @@ export default function BlogEditor({
             }
           />
           <FormControl variant="outlined">
-            <InputLabel margin="normal"  id="cate" required>
+            <InputLabel margin="normal" id="cate" required>
               Category
             </InputLabel>
 
@@ -123,16 +133,16 @@ export default function BlogEditor({
                 inputSetState({ ...inputState, category: e.target.value })
               }
             >
-              <MenuItem value="ಕವಿತೆ">ಕವಿತೆ</MenuItem>
-              <MenuItem value="ಕಥೆ">ಕಥೆ</MenuItem>
-              <MenuItem value="ಲೇಖನ">ಲೇಖನ</MenuItem>
+              {categories.map((category) => (
+                <MenuItem key={category} value={category}>
+                  {category}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControlLabel
-          
             control={
               <Switch
-              
                 color="primary"
                 checked={featured}
                 name="featured"
