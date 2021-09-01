@@ -21,7 +21,9 @@ const sliderStyles = makeStyles((theme) => ({
   },
  
   media: {
-    height: 140,
+    position: "relative",
+    height: "10rem",
+    width: "100%",
   },
 }));
 

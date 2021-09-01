@@ -58,8 +58,7 @@ function Slider({ featuredBlogs }) {
                       <Image
                         src={step.imageURL}
                         alt="rhumbnail"
-                        height="200"
-                        width="100%"
+                       layout="fill"
                       />
                     </CardMedia>
                     <Link href={`${step.category}/${step.id}`}>

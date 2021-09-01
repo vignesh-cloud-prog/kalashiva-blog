@@ -13,8 +13,6 @@ import Image from "next/image";
 import useStyles from "../../styles/usestyles";
 import ReactTimeAgo from "react-time-ago";
 
-
-
 import { Button, Grid } from "@material-ui/core";
 import {
   BookmarkBorderOutlined,
@@ -104,7 +102,16 @@ export default function BlogCard({
         subheader={<ReactTimeAgo date={createdAt} locale="en-US" />}
       />
 
-      <CardMedia><Image src={image} alt="rhumbnail" height="150" width="100%"/></CardMedia>
+      <CardMedia
+        style={{ position: "relative", height: "8rem", width: "100%" }}
+      >
+        <Image
+          src={image}
+          alt="rhumbnail"
+         
+          layout="fill"
+        />
+      </CardMedia>
 
       <Link href={`/${category}/${id}`}>
         <a>
@@ -126,12 +133,13 @@ export default function BlogCard({
             aria-label="add to favorites"
             onClick={() => {
               if (user) {
-                removeFromCollection(user.uid, id).then((res)=>addMessage(res.message,res.status))
+                removeFromCollection(user.uid, id).then((res) =>
+                  addMessage(res.message, res.status)
+                );
                 updateUserDataChanged();
               }
             }}
           >
-            
             <BookmarkOutlinedIcon />
           </IconButton>
         ) : (
@@ -145,7 +153,6 @@ export default function BlogCard({
                 });
             }}
           >
-            
             <BookmarkBorderOutlined />
           </IconButton>
         )}
@@ -155,7 +162,9 @@ export default function BlogCard({
             aria-label="add to read later"
             onClick={() => {
               if (user) {
-                removeFromReadLater(user.uid, id).then((res)=>addMessage(res.message,res.status))
+                removeFromReadLater(user.uid, id).then((res) =>
+                  addMessage(res.message, res.status)
+                );
                 updateUserDataChanged();
               }
             }}

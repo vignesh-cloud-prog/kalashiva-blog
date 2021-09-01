@@ -16,11 +16,9 @@ const useStyles = makeStyles((theme) => ({
   alert: {
     width: "100%",
   },
- 
+
   expand: {
-    
-    marginLeft: 'auto',
-   
+    marginLeft: "auto",
   },
   header: {
     display: "flex",
@@ -36,11 +34,11 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     width: "100%",
   },
- 
+
   media: {
-    height: 150,
-    objectFit:"cover",
-    // width:"100%"
+    position: "relative",
+    height: "8rem",
+    width: "100%",
   },
 }));
 
