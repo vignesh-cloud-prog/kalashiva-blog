@@ -12,16 +12,34 @@ import {
 import CloseIcon from "@material-ui/icons/Close";
 import Image from "next/image";
 import ShareContext from "../../store/share_context";
+import MessageContext from "../../store/message_context";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 // Icons from here https://icons8.com/icon/set/linkedin/color
 export default function Share() {
+  const messages = useContext(MessageContext)
+  const {addMessage}=messages
+
   const data = useContext(ShareContext);
 
   const { url, title, summary, open } = data.share;
   const { removeFromShre } = data;
+
+  const copyText = () => {
+    var text = url;
+    navigator.clipboard.writeText(text).then(
+      function () {
+        addMessage("copied","success")
+        removeFromShre({ open: false });
+      },
+      function (err) {
+        addMessage(err,"error")
+       
+      }
+    );
+  };
 
   const socials = [
     {
@@ -33,6 +51,11 @@ export default function Share() {
       name: "facebook",
       file: "facebook.gif",
       link: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+    },
+    {
+      name: "instagram",
+      file: "instagram.gif",
+      link: `https://www.instagram.com/?url=${url}`,
     },
     {
       name: "linkedin",
@@ -83,8 +106,19 @@ export default function Share() {
         </DialogTitle>
         <DialogActions>
           <Grid container alignItems="center" justifyContent="center">
+            <Grid item xs={3}>
+              <Image
+                onClick={() => copyText()}
+                src={`/icons/copy.gif`}
+                alt={`copy-icon`}
+                layout="responsive"
+                width="5vw"
+                height="5vh"
+              />
+              <Typography align="center">copy</Typography>
+            </Grid>
             {socials.map((social) => (
-              <Grid item xs={3} key={social.name} >
+              <Grid item xs={3} key={social.name}>
                 <a href={social.link}>
                   <Image
                     src={`/icons/${social.file}`}

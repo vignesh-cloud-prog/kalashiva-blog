@@ -73,7 +73,7 @@ export default function Login({ children }) {
         <Container maxWidth="sm" className={classes.padd}>
           <div className={classes.mb}>
             <Image
-              src="/kaalashiva.jpg"
+              src="/kaalashiva.jpeg"
               layout="responsive"
               height="30vh"
               width="80vw"
