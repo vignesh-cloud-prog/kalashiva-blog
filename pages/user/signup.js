@@ -140,7 +140,7 @@ export default function Signup() {
             </FormControl>
           </form>
           <Typography align="center">
-            <Link href="login">Already have an account&#63; Login</Link>
+            <Link href="/user/login">Already have an account&#63; Login</Link>
           </Typography>
         </Container>
         <Typography align="center">or</Typography>
