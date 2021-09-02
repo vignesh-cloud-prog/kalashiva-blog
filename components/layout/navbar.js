@@ -8,16 +8,20 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import { Avatar, Menu, MenuItem } from "@material-ui/core";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import BookmarkOutlinedIcon from "@material-ui/icons/BookmarkOutlined";
+import LibraryAddCheckIcon from "@material-ui/icons/LibraryAddCheck";
+import { Avatar, Divider, Menu, MenuItem } from "@material-ui/core";
 import UserContext from "../../store/user_context";
+import { AccountCircle } from "@material-ui/icons";
 
 export default function Navbar() {
   const userContext = useContext(UserContext);
-  const { user} = userContext;
+  const { user } = userContext;
   const navClass = navStyles();
 
- const data = useContext(MessageContext)
-  const {addMessage}=data
+  const data = useContext(MessageContext);
+  const { addMessage } = data;
 
   const menuId = "primary-search-account-menu";
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -65,22 +69,77 @@ export default function Navbar() {
                 open={isMenuOpen}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                <Link href="/user">
+                  <a>
+                    <MenuItem style={{ color: "MenuText" }}>
+                      <IconButton
+                        onClick={handleMenuClose}
+                        aria-label="account of current user"
+                        aria-controls="primary-search-account-menu"
+                        aria-haspopup="true"
+                        color="inherit"
+                      >
+                        <AccountCircle />
+                      </IconButton>
+                      Profile
+                    </MenuItem>
+                  </a>
+                </Link>
+                <Divider variant="center" />
+                <Link href="/user">
+                  <a>
+                    <MenuItem style={{ color: "MenuText" }}>
+                      <IconButton
+                        onClick={handleMenuClose}
+                        aria-label="account of current user"
+                        aria-controls="primary-search-account-menu"
+                        aria-haspopup="true"
+                        color="inherit"
+                      >
+                        <BookmarkOutlinedIcon />
+                      </IconButton>
+                      My Collections
+                    </MenuItem>
+                  </a>
+                </Link>
+                <Link href="/user">
+                  <a>
+                    <MenuItem style={{ color: "MenuText" }}>
+                      <IconButton
+                        onClick={handleMenuClose}
+                        aria-label="account of current user"
+                        aria-controls="primary-search-account-menu"
+                        aria-haspopup="true"
+                        color="inherit"
+                      >
+                       <LibraryAddCheckIcon />
+                      </IconButton>
+                      My Read laters
+                    </MenuItem>
+                  </a>
+                </Link>
+                <Divider variant="center" />
                 <MenuItem
                   onClick={() => {
                     auth
                       .signOut()
                       .then(() => {
-                        addMessage("Log-out Successful","success")
-                        
+                        addMessage("Logout Successful", "success");
                       })
                       .catch((error) => {
-                        addMessage(`${error.message} - ${error.code}`,"error")
-                        
+                        addMessage(`${error.message} - ${error.code}`, "error");
                       });
                   }}
                 >
-                  Logout
+                  <IconButton
+                    aria-label="account of current user"
+                    aria-controls="primary-search-account-menu"
+                    aria-haspopup="true"
+                    color="inherit"
+                  >
+                    <ExitToAppIcon />
+                  </IconButton>
+                  <p>Logout</p>
                 </MenuItem>
               </Menu>
             </>
@@ -95,12 +154,38 @@ export default function Navbar() {
                 open={isMenuOpen}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={handleMenuClose}>
-                  <Link href="login">Login</Link>
-                </MenuItem>
-                <MenuItem onClick={handleMenuClose}>
-                  <Link href="signup">Signup</Link>
-                </MenuItem>
+               <Link href="/user/login">
+                  <a>
+                    <MenuItem style={{ color: "MenuText" }}>
+                      <IconButton
+                        onClick={handleMenuClose}
+                        aria-label="account of current user"
+                        aria-controls="primary-search-account-menu"
+                        aria-haspopup="true"
+                        color="inherit"
+                      >
+                        <AccountCircle />
+                      </IconButton>
+                      Login
+                    </MenuItem>
+                  </a>
+                </Link>
+                <Link href="/user/signup">
+                  <a>
+                    <MenuItem style={{ color: "MenuText" }}>
+                      <IconButton
+                        onClick={handleMenuClose}
+                        aria-label="account of current user"
+                        aria-controls="primary-search-account-menu"
+                        aria-haspopup="true"
+                        color="inherit"
+                      >
+                        <AccountCircle />
+                      </IconButton>
+                      Signup
+                    </MenuItem>
+                  </a>
+                </Link>
               </Menu>
             </>
           )}

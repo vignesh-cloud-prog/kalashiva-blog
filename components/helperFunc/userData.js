@@ -30,7 +30,7 @@ export const getUserReadLater = (uId) => {
   return userReadLaterQuery;
 };
 
-export const addToCollection = async (uId, pId, pTitle, pURL) => {
+export const addToCollection = async (uId, pId, pTitle,pCategory, pURL) => {
   const result = await db
     .collection("users")
     .doc(uId)
@@ -39,6 +39,7 @@ export const addToCollection = async (uId, pId, pTitle, pURL) => {
     .set({
       id: pId,
       title: pTitle,
+      category:pCategory,
       url: pURL,
     })
     .then(() => {
@@ -49,7 +50,7 @@ export const addToCollection = async (uId, pId, pTitle, pURL) => {
     });
   return result;
 };
-export const addToReadLater = async (uId, pId, pTitle, pURL) => {
+export const addToReadLater = async (uId, pId, pTitle,pCategory, pURL) => {
   const result = await db
     .collection("users")
     .doc(uId)
@@ -58,6 +59,7 @@ export const addToReadLater = async (uId, pId, pTitle, pURL) => {
     .set({
       id: pId,
       title: pTitle,
+      category:pCategory,
       url: pURL,
       read: false,
     })

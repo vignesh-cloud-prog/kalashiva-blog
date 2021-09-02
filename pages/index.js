@@ -25,11 +25,10 @@ import UserContext from "../store/user_context";
 // Firebase related import
 import { db } from "../firebase/firebase";
 
-
-export default function Home({ allBlogs, featuredBlogs }) {
+export default function Home({ allBlogs, featuredBlogs, topBlogs }) {
   // Checking email for admin to provide extra functionality
   const userContext = useContext(UserContext);
-  const { user} = userContext;
+  const { user } = userContext;
   let userEmail;
   if (user != null) userEmail = user["email"];
 
@@ -38,15 +37,17 @@ export default function Home({ allBlogs, featuredBlogs }) {
 
   // React state
   const [blogs, setBlogs] = useState(allBlogs);
-  const [end, setEnd] = useState(false);
+  const [allTopBlogs, setAllTopBlogs] = useState(topBlogs);
+  const [endRecent, setEndRecent] = useState(false);
+  const [endFamous, setEndFamous] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // Function to load more Recent Blogs
-  const loadMore = async () => {
+  const loadMoreRecent = async () => {
     setLoading(true);
     const last = blogs[blogs.length - 1];
     const res = await db
-      .collection("blogs")
+      .collection("blogdetails")
       .orderBy("createdAt", "desc")
       .startAfter(new Date(last.createdAt))
       .limit(4)
@@ -61,7 +62,32 @@ export default function Home({ allBlogs, featuredBlogs }) {
     setBlogs(blogs.concat(newblogs));
 
     if (newblogs.length < 4) {
-      setEnd(true);
+      setEndRecent(true);
+    }
+
+    setLoading(false);
+  };
+  // Function to load more Famous Blogs
+  const loadMoreTop = async () => {
+    setLoading(true);
+    const last = allTopBlogs[allTopBlogs.length - 1];
+    const res = await db
+      .collection("blogdetails")
+      .orderBy("viewCount", "desc")
+      .startAfter(last.viewCount)
+      .limit(4)
+      .get();
+    const newblogs = res.docs.map((docSnap) => {
+      return {
+        ...docSnap.data(),
+        createdAt: docSnap.data().createdAt.toMillis(),
+        id: docSnap.id,
+      };
+    });
+    setAllTopBlogs(allTopBlogs.concat(newblogs));
+
+    if (newblogs.length < 4) {
+      setEndFamous(true);
     }
 
     setLoading(false);
@@ -69,7 +95,7 @@ export default function Home({ allBlogs, featuredBlogs }) {
 
   return (
     <Main featuredBlogs={featuredBlogs}>
-      <h1>Recent Blogs</h1>
+      <h1>ಇತ್ತೀಚಿಗೆನವುಗಳು</h1>
       {blogs?.length ? (
         <>
           {" "}
@@ -89,7 +115,7 @@ export default function Home({ allBlogs, featuredBlogs }) {
               </Grid>
             ))}
           </Grid>
-          {end == false ? (
+          {endRecent == false ? (
             <>
               <div className={classes.wrapper}>
                 <Button
@@ -97,19 +123,68 @@ export default function Home({ allBlogs, featuredBlogs }) {
                   variant="contained"
                   color="primary"
                   disabled={loading}
-                  onClick={() => loadMore()}
+                  onClick={() => loadMoreRecent()}
                 >
-                  LOAD MORE
+                  ಇನ್ನಷ್ಟು
                 </Button>
                 {loading && (
                   <CircularProgress
                     size={24}
                     style={{
                       position: "absolute",
-                      top: "0",
-                      bottom: "0",
-                      right: "0",
-                      left: "0",
+                     
+                      left: "50%",
+                    }}
+                  />
+                )}
+              </div>
+            </>
+          ) : (
+            <Typography align="center">You have reached the end</Typography>
+          )}
+        </>
+      ) : (
+        <Typography align="center">No Blogs are available</Typography>
+      )}
+      <h1>ಜನಪ್ರಿಯ</h1>
+      {allTopBlogs?.length ? (
+        <>
+          {" "}
+          <Grid container spacing={3}>
+            {allTopBlogs.map((blog) => (
+              <Grid item xs={12} md={6} lg={3} key={blog.id}>
+                <BlogCard
+                  user={user}
+                  image={blog?.imageURL}
+                  title={blog?.title}
+                  slug={blog?.slug}
+                  desc={blog?.desc}
+                  id={blog?.id}
+                  category={blog?.category}
+                  createdAt={blog?.createdAt}
+                />
+              </Grid>
+            ))}
+          </Grid>
+          {endFamous == false ? (
+            <>
+              <div className={classes.wrapper}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  disabled={loading}
+                  onClick={() => loadMoreTop()}
+                >
+                  ಇನ್ನಷ್ಟು
+                </Button>
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    style={{
+                      position: "absolute",
+                      
+                      left: "50%",
                     }}
                   />
                 )}
@@ -168,7 +243,7 @@ export async function getServerSideProps() {
   const topQuerySnap = await db
     .collection("blogdetails")
     .where("published", "==", true)
-    .orderBy("viewCount")
+    .orderBy("viewCount", "desc")
     .limit(4)
     .get();
   const topBlogs = topQuerySnap.docs.map((docSnap) => {

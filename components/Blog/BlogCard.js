@@ -137,7 +137,7 @@ export default function BlogCard({
             aria-label="add to favorites"
             onClick={() => {
               if (user)
-                addToCollection(user.uid, id, title, image).then((res) => {
+                addToCollection(user.uid, id, title,category, image).then((res) => {
                   updateUserDataChanged();
                   return addMessage(res.message, res.status);
                 });
@@ -166,7 +166,7 @@ export default function BlogCard({
             aria-label="add to bookmark"
             onClick={() => {
               if (user)
-                addToReadLater(user.uid, id, title, image).then((res) => {
+                addToReadLater(user.uid, id, title,category, image).then((res) => {
                   updateUserDataChanged();
                   return addMessage(res.message, res.status);
                 });

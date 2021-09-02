@@ -33,19 +33,20 @@ export default function HomeTabs() {
     <div>
       <AppBar position="static" color="default" style={{ display: "flex" }}>
         <Grid container>
-          <Grid item xs={3} md={1}>
+          <Grid item container  xs={3} md={1} justify="center" alignItems="center">
             <Link href="/">
               <a>
                 <Tab
                   label="Home"
                   icon={<Home />}
-                  style={{ color: "#1a237e" }}
+                  style={{ color: "#1a237e"}}
                 />
               </a>
             </Link>
           </Grid>
           <Grid item xs={9} md={11}>
             <Tabs
+
               value={value}
               onChange={handleChange}
               indicatorColor="primary"
