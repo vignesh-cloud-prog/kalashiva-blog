@@ -138,7 +138,7 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
         </>
       ) : (
         <>
-          <Link href="/login">
+          <Link href="/user/login">
             <a>Please login to make comment</a>
           </Link>
         </>
