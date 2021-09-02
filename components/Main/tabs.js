@@ -33,7 +33,7 @@ export default function HomeTabs() {
     <div>
       <AppBar position="static" color="default" style={{ display: "flex" }}>
         <Grid container>
-          <Grid item container  xs={3} md={1} justify="center" alignItems="center">
+          <Grid item container  xs={3} md={1} justifyContent="center" alignItems="center">
             <Link href="/">
               <a>
                 <Tab

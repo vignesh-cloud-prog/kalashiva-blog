@@ -5,9 +5,12 @@ import useStyles from "../../styles/usestyles";
 import BlogEditor from "../../components/Blog/blogEditor";
 import MessageContext from "../../store/message_context";
 import { useRouter } from 'next/router'
+import UserContext from "../../store/user_context";
 
 export default function CreateBlog() {
-  
+  const userContext = useContext(UserContext);
+  const { user} =
+    userContext;
   const router = useRouter()
   const classes = useStyles();
   const [blogInfo, setBlogInfo] = useState({
