@@ -41,7 +41,7 @@ export default function BlogEditor({
   const { user } = userContext;
   useEffect(() => {
     if (user) {
-      if (user["email"] !== "kaalashiva.kar@gmail.com") {
+      if (user["email"] !== process.env.NEXT_PUBLIC_KAALASHIVA_ADMIN) {
         router.push("/");
       }
     } 
@@ -66,7 +66,7 @@ export default function BlogEditor({
   const { featured, category, desc, url, body, title, slug, published } =
     inputState;
 
-  if (!user || user["email"] !== "kaalashiva.kar@gmail.com")
+  if (!user || user["email"] !== process.env.NEXT_PUBLIC_KAALASHIVA_ADMIN)
     return <p>Loading...</p>;
   return (
     <div>

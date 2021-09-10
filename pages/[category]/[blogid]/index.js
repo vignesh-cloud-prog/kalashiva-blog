@@ -174,7 +174,7 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
         <p>No comments yet</p>
       )}
 
-      {userEmail == "kaalashiva.kar@gmail.com" ? (
+      {userEmail == process.env.NEXT_PUBLIC_KAALASHIVA_ADMIN ? (
         <Link href={`/${category}/${blogid}/update`} replace>
           <a>
             <Fab

@@ -199,7 +199,7 @@ export default function Home({ allBlogs, featuredBlogs, topBlogs }) {
       )}
 
       {/* Admin have the option to add new blogs in this home page */}
-      {userEmail == "kaalashiva.kar@gmail.com" ? (
+      {userEmail == process.env.NEXT_PUBLIC_KAALASHIVA_ADMIN ? (
         <Link href="admin/createblog">
           <a>
             <Fab
