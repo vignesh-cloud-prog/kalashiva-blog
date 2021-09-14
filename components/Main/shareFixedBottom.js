@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Image from "next/image";
 import MessageContext from "../../store/message_context";
-import styles from "../../styles/Share.module.css"
+import styles from "../../styles/Share.module.css";
 export default function ShareFixedBottom({ url, title, summary }) {
   const messages = useContext(MessageContext);
   const { addMessage } = messages;
@@ -55,19 +55,19 @@ export default function ShareFixedBottom({ url, title, summary }) {
     },
   ];
   return (
-    
-      <div className={styles.shareContainer} >
-        <Image
-          onClick={() => copyText()}
-          src={`/icons/socials/copy.png`}
-          alt={`copy-icon`}
-          width="60px"
-          height="60px"
-        />
-        {/* <Typography align="center">copy</Typography> */}
+    <div className={styles.shareContainer}>
+      <Image
+        onClick={() => copyText()}
+        src={`/icons/socials/copy.png`}
+        alt={`copy-icon`}
+        width="60px"
+        height="60px"
+      />
+      {/* <Typography align="center">copy</Typography> */}
 
-        {socials.map((social) => (
-          <a href={social.link} key={socials.link}>
+      {socials.map((social) => (
+        <div key={socials.link}>
+          <a href={social.link}>
             <Image
               src={`/icons/${social.file}`}
               alt={`${social.name}-icon`}
@@ -76,8 +76,8 @@ export default function ShareFixedBottom({ url, title, summary }) {
             />
             {/* <Typography align="center">{social.name}</Typography> */}
           </a>
-        ))}
-      </div>
-   
+        </div>
+      ))}
+    </div>
   );
 }

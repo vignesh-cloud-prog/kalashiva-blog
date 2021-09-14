@@ -116,7 +116,7 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
       >
         <Image layout="fill" src={blogDetails.imageURL} alt="image" />
       </div>
-      <h6>Author : <big>{blogDetails.postedBy}</big></h6>
+      <h6>Author : <big>ಕಾಲಶಿವ ನಿಟ್ಟೂರು</big></h6>
       <div
         onCopy={(e) => {
           e.preventDefault();

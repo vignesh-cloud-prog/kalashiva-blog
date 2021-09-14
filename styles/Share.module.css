@@ -4,12 +4,12 @@
   position: fixed;
   bottom: 5vh;
   left: 5vw;
-  justify-content: stretch;
+  justify-content: center;
   width: "100%";
   background: white;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1200px) {
   .shareContainer {
     flex-direction: row;
     position: fixed;

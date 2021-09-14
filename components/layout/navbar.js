@@ -38,15 +38,23 @@ export default function Navbar() {
     <div className={navClass.nav}>
       <AppBar position="static">
         <Toolbar>
-          <Avatar
-            alt="Kaalashiva"
-            variant="rounded"
-            src="/kaalashiva.jpeg"
-            className={navClass.menuButton}
-          />
+          <Link href="/">
+            <a>
+              <Avatar
+                alt="Kaalashiva"
+                variant="rounded"
+                src="/kaalashiva.jpeg"
+                className={navClass.menuButton}
+              />
+            </a>
+          </Link>
+
           <Typography variant="h6" className={navClass.title}>
-            <Link href="/">ಕಾಲಶಿವ</Link>
+            <Link href="/">
+              <a>ಕಾಲಶಿವ</a>
+            </Link>
           </Typography>
+
           <IconButton
             edge="end"
             aria-label="account of current user"
@@ -112,7 +120,7 @@ export default function Navbar() {
                         aria-haspopup="true"
                         color="inherit"
                       >
-                       <LibraryAddCheckIcon />
+                        <LibraryAddCheckIcon />
                       </IconButton>
                       My Read laters
                     </MenuItem>
@@ -154,7 +162,7 @@ export default function Navbar() {
                 open={isMenuOpen}
                 onClose={handleMenuClose}
               >
-               <Link href="/user/login">
+                <Link href="/user/login">
                   <a>
                     <MenuItem style={{ color: "MenuText" }}>
                       <IconButton

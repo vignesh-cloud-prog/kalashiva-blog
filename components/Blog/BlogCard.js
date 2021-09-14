@@ -61,7 +61,7 @@ export default function BlogCard({
 
   useEffect(() => {
     setShareData({
-      url: `${window.location.protocol}//${window.location.hostname}/${category}/${id}`,
+      url: `${window.location.origin}/${category}/${id}`,
       title: `${title}`,
       summary: `${desc}`,
       open: true,
