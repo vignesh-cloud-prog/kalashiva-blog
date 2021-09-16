@@ -7,6 +7,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import blogDetailsStyles from "../../../styles/blogDetailsStyles";
 
 // Material ui components
 import {
@@ -33,7 +34,7 @@ import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
 import ShareFixedBottom from "../../../components/Main/shareFixedBottom";
 
 export default function BlogDetails({ blogDetails, blogBody, allComments }) {
-  
+  const classes=blogDetailsStyles()
   // Checking Amin for providing special functionality
   const userContext = useContext(UserContext);
   const { user } = userContext;
@@ -97,7 +98,7 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" className={classes.container}>
       <Head>
         <title>{`${blogDetails.title} | kaalashiva`}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -105,7 +106,7 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
       </Head>
       <h1>{blogDetails.title}</h1>
       <big>{blogDetails.category}</big>
-      <h5>created on - {new Date(blogDetails.createdAt).toDateString()}</h5>
+      <h5>created on : {new Date(blogDetails.createdAt).toDateString()}</h5>
       <div
         style={{
           position: "relative",

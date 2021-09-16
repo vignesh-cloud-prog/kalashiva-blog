@@ -140,7 +140,7 @@ export default function Home({ allBlogs, featuredBlogs, topBlogs }) {
               </div>
             </>
           ) : (
-            <Typography align="center">You have reached the end</Typography>
+            <Typography align="center"></Typography>
           )}
         </>
       ) : (
@@ -191,7 +191,7 @@ export default function Home({ allBlogs, featuredBlogs, topBlogs }) {
               </div>
             </>
           ) : (
-            <Typography align="center">You have reached the end</Typography>
+            <Typography align="center"></Typography>
           )}
         </>
       ) : (
