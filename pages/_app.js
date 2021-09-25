@@ -17,12 +17,9 @@ import TimeAgo from "javascript-time-ago";
 
 import en from "javascript-time-ago/locale/en";
 
-
 TimeAgo.addDefaultLocale(en);
 
-
 function MyApp({ Component, pageProps }) {
-
   return (
     <>
       <MessageContextProvider>
@@ -44,8 +41,8 @@ function MyApp({ Component, pageProps }) {
                 content="kannada, kaalashiva, blog, story, article"
               />
             </Head>
-            <Navbar/>
-            <Component {...pageProps}  />
+            <Navbar />
+            <Component {...pageProps} />
             <Alerts />
             <Share />
           </UserContextProvider>

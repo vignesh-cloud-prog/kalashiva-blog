@@ -34,7 +34,7 @@ import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
 import ShareFixedBottom from "../../../components/Main/shareFixedBottom";
 
 export default function BlogDetails({ blogDetails, blogBody, allComments }) {
-  const classes=blogDetailsStyles()
+  const classes = blogDetailsStyles();
   // Checking Amin for providing special functionality
   const userContext = useContext(UserContext);
   const { user } = userContext;
@@ -122,7 +122,9 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
       >
         <Image layout="fill" src={blogDetails.imageURL} alt="image" />
       </div>
-      <h6>Author : <big>ಕಾಲಶಿವ ನಿಟ್ಟೂರು</big></h6>
+      <h6>
+        Author : <big>ಕಾಲಶಿವ ನಿಟ್ಟೂರು</big>
+      </h6>
       <div
         onCopy={(e) => {
           e.preventDefault();
