@@ -103,6 +103,11 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
         <title>{`${blogDetails.title} | kaalashiva`}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content={`${blogDetails.desc}`} />
+        <meta property="og:title" content={`${blogDetails.title}`} />
+        <meta property="og:description" content={`${blogDetails.desc}`} />
+        <meta property="og:image" content={`${blogDetails.imageURL}`} />
+        <meta property="og:type" content={`${blogDetails.category}`} />
+        <meta property="og:url" content={`${window.location.href}${blogDetails.imageURL}`}/>
       </Head>
       <h1>{blogDetails.title}</h1>
       <big>{blogDetails.category}</big>
