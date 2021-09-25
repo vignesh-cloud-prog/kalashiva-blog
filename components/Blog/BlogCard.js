@@ -61,7 +61,7 @@ export default function BlogCard({
 
   useEffect(() => {
     setShareData({
-      url: `${window.location.protocol}//${window.location.hostname}/${category}/${id}`,
+      url: `${window.location.origin}/${category}/${id}`,
       title: `${title}`,
       summary: `${desc}`,
       open: true,
@@ -127,7 +127,7 @@ export default function BlogCard({
                   addMessage(res.message, res.status)
                 );
                 updateUserDataChanged();
-              }
+              } else addMessage("You need to login", "info");
             }}
           >
             <BookmarkOutlinedIcon />
@@ -137,10 +137,13 @@ export default function BlogCard({
             aria-label="add to favorites"
             onClick={() => {
               if (user)
-                addToCollection(user.uid, id, title,category, image).then((res) => {
-                  updateUserDataChanged();
-                  return addMessage(res.message, res.status);
-                });
+                addToCollection(user.uid, id, title, category, image).then(
+                  (res) => {
+                    updateUserDataChanged();
+                    return addMessage(res.message, res.status);
+                  }
+                );
+              else addMessage("You need to login", "info");
             }}
           >
             <BookmarkBorderOutlined />
@@ -156,7 +159,7 @@ export default function BlogCard({
                   addMessage(res.message, res.status)
                 );
                 updateUserDataChanged();
-              }
+              } else addMessage("You need to login", "info");
             }}
           >
             <LibraryAddCheckIcon />
@@ -165,11 +168,14 @@ export default function BlogCard({
           <IconButton
             aria-label="add to bookmark"
             onClick={() => {
-              if (user)
-                addToReadLater(user.uid, id, title,category, image).then((res) => {
-                  updateUserDataChanged();
-                  return addMessage(res.message, res.status);
-                });
+              if (user) {
+                addToReadLater(user.uid, id, title, category, image).then(
+                  (res) => {
+                    updateUserDataChanged();
+                    return addMessage(res.message, res.status);
+                  }
+                );
+              } else addMessage("You need to login", "info");
             }}
           >
             <LibraryAddOutlined />

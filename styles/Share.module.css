@@ -1,0 +1,21 @@
+.shareContainer {
+  display: flex;
+  flex-direction: column-reverse;
+  position: fixed;
+  bottom: 5vh;
+  left: 5vw;
+  justify-content: center;
+  width: "100%";
+  background: white;
+}
+
+@media (max-width: 1200px) {
+  .shareContainer {
+    flex-direction: row;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    justify-content: center;
+    width: 100%;
+  }
+}

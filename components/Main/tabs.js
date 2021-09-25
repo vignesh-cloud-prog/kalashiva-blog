@@ -31,7 +31,7 @@ export default function HomeTabs() {
 
   return (
     <div>
-      <AppBar position="static" color="default" style={{ display: "flex" }}>
+      <AppBar position="static" color="default" style={{ display: "flex",marginTop:"1rem" }}>
         <Grid container>
           <Grid item container  xs={3} md={1} justifyContent="center" alignItems="center">
             <Link href="/">

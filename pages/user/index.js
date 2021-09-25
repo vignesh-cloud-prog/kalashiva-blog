@@ -3,7 +3,7 @@ import React from 'react'
 export default function UserProfile() {
     return (
         <div>
-            User
+            <h1>This page is under development</h1>
         </div>
     )
 }

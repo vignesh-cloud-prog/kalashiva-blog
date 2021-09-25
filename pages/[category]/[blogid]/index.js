@@ -7,6 +7,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import blogDetailsStyles from "../../../styles/blogDetailsStyles";
 
 // Material ui components
 import {
@@ -30,15 +31,17 @@ import UserContext from "../../../store/user_context";
 // Firebase
 import { db, serverTimeStamp, increment } from "../../../firebase/firebase";
 import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
+import ShareFixedBottom from "../../../components/Main/shareFixedBottom";
 
 export default function BlogDetails({ blogDetails, blogBody, allComments }) {
+  const classes=blogDetailsStyles()
   // Checking Amin for providing special functionality
   const userContext = useContext(UserContext);
   const { user } = userContext;
   let userEmail;
   if (user != null) userEmail = user["email"];
 
-  const toolStyle = { display: "none" };
+  const [url, setUrl] = useState("");
   const [comment, setComment] = useState("");
   const [comments, setAllComments] = useState(allComments);
 
@@ -58,6 +61,9 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
 
   useEffect(() => {
     incrementViewCount();
+    setUrl(
+      `${window.location.protocol}//${window.location.hostname}/${blogDetails.category}/${blogDetails.id}`
+    );
   }, []);
   const makeComment = async () => {
     // Function make comments by user related to post
@@ -92,28 +98,51 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" className={classes.container}>
       <Head>
         <title>{`${blogDetails.title} | kaalashiva`}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content={`${blogDetails.desc}`} />
+        <meta property="og:title" content={`${blogDetails.title}`} />
+        <meta property="og:description" content={`${blogDetails.desc}`} />
+        <meta property="og:image" content={`${blogDetails.imageURL}`} />
+        <meta property="og:type" content={`${blogDetails.category}`} />
+        <meta property="og:url" content={`${window.location.href}${blogDetails.imageURL}`}/>
       </Head>
       <h1>{blogDetails.title}</h1>
-      <h5>created on - {new Date(blogDetails.createdAt).toDateString()}</h5>
-      <div style={{ position: "relative", height: "10rem", width: "100%", margin:"auto" }}>
-        <Image  layout="fill" src={blogDetails.imageURL} alt="image" />
+      <big>{blogDetails.category}</big>
+      <h5>created on : {new Date(blogDetails.createdAt).toDateString()}</h5>
+      <div
+        style={{
+          position: "relative",
+          height: "10rem",
+          width: "100%",
+          margin: "auto",
+        }}
+      >
+        <Image layout="fill" src={blogDetails.imageURL} alt="image" />
       </div>
-      <div onCopy={(e)=>{e.preventDefault(); return false}} onCut={(e)=>{e.preventDefault(); return false}}dangerouslySetInnerHTML={{ __html: blogBody.blogBody }}></div>
+      <h6>Author : <big>ಕಾಲಶಿವ ನಿಟ್ಟೂರು</big></h6>
+      <div
+        onCopy={(e) => {
+          e.preventDefault();
+          return false;
+        }}
+        onCut={(e) => {
+          e.preventDefault();
+          return false;
+        }}
+        dangerouslySetInnerHTML={{ __html: blogBody.blogBody }}
+      ></div>
       <Typography variant="h5">{`Comments(${comments?.length})`}</Typography>
       {user ? (
         <>
           <Grid container alignItems="flex-end" justifyContent="center">
-            <Grid container justifyContent="center"  md={1} xs={2}>
+            <Grid container justifyContent="center" md={1} xs={2}>
               <Avatar alt={user?.displayName} src={user?.photoURL} />
             </Grid>
-            <Grid item md={11} xs={10} >
-            
-            <TextField
+            <Grid item md={11} xs={10}>
+              <TextField
                 fullWidth
                 id="input-with-icon-comment"
                 label="Comment"
@@ -132,7 +161,6 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
                   ),
                 }}
               />
-          
             </Grid>
           </Grid>
         </>
@@ -154,13 +182,11 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
                   <Grid item style={{ margin: "0.5rem" }}>
                     <Avatar alt={user?.name} src={cmt?.photo} />
                   </Grid>
-                  <Grid item >
-                    
+                  <Grid item>
                     <Typography variant="h6">
                       {`${cmt?.name}  `}
                       <small>
-
-                      <ReactTimeAgo date={cmt?.commentedAt} locale="en-US" />
+                        <ReactTimeAgo date={cmt?.commentedAt} locale="en-US" />
                       </small>
                     </Typography>
                     <Typography variant="body1">{cmt?.text}</Typography>
@@ -174,7 +200,7 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
         <p>No comments yet</p>
       )}
 
-      {userEmail == "kaalashiva.kar@gmail.com" ? (
+      {userEmail == process.env.NEXT_PUBLIC_KAALASHIVA_ADMIN ? (
         <Link href={`/${category}/${blogid}/update`} replace>
           <a>
             <Fab
@@ -182,7 +208,7 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
               aria-label="edit"
               style={{
                 position: "fixed",
-                bottom: "2vh",
+                bottom: "10vh",
                 right: "2vh",
               }}
             >
@@ -191,6 +217,11 @@ export default function BlogDetails({ blogDetails, blogBody, allComments }) {
           </a>
         </Link>
       ) : null}
+      <ShareFixedBottom
+        url={url}
+        title={blogDetails.title}
+        summary={blogDetails.desc}
+      />
     </Container>
   );
 }
