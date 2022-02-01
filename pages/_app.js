@@ -20,6 +20,15 @@ import en from "javascript-time-ago/locale/en";
 TimeAgo.addDefaultLocale(en);
 
 function MyApp({ Component, pageProps }) {
+  useEffect(() => {
+  
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-HX2WW6VX6T');
+  
+  });
   return (
     <>
       <MessageContextProvider>
@@ -40,6 +49,9 @@ function MyApp({ Component, pageProps }) {
                 name="keywords"
                 content="kannada, kaalashiva, blog, story, article"
               />
+              {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HX2WW6VX6T"></script>
+
             </Head>
             <Navbar />
             <Component {...pageProps} />
