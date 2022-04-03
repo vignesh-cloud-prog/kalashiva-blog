@@ -45,7 +45,7 @@ export default function UpdateBlog({ blog, resultBody, blogid }) {
     category: blogInfo.category,
     featured: blogInfo.featured,
     published: blogInfo.published,
-    imageURL: image.preview,
+    imageURL: blogInfo.url,
     createdAt: serverTimeStamp(),
   };
 
@@ -124,11 +124,12 @@ export default function UpdateBlog({ blog, resultBody, blogid }) {
           () => {
             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
               setBlogInfo({ ...blogInfo, url: downloadURL });
+              setupdateBlogState(true);
             });
           }
         );
       }
-      setupdateBlogState(true);
+      
     } else {
       addMessage("Please enter all the fields", "warning");
     }
