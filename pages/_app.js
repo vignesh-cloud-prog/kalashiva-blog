@@ -16,6 +16,8 @@ import { UserContextProvider } from "../store/user_context";
 import TimeAgo from "javascript-time-ago";
 
 import en from "javascript-time-ago/locale/en";
+import CopyRight from "../components/Main/copyRight";
+
 
 TimeAgo.addDefaultLocale(en);
 
@@ -51,12 +53,16 @@ function MyApp({ Component, pageProps }) {
               />
               {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-HX2WW6VX6T"></script>
+{/* google adsense */}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3063366338027716"
+     crossOrigin="anonymous"></script>
 
             </Head>
             <Navbar />
             <Component {...pageProps} />
             <Alerts />
             <Share />
+            <CopyRight/>
           </UserContextProvider>
         </ShareContextProvider>
       </MessageContextProvider>
