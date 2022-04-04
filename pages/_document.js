@@ -8,6 +8,12 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           {/* PWA primary color */}
+{/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HX2WW6VX6T"></script>
+{/* google adsense */}
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3063366338027716"
+     crossOrigin="anonymous"></script>
          
         </Head>
         <body>
