@@ -7,7 +7,7 @@ export default function CopyRight() {
           <Typography variant="body2" color="text.secondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="https://kaalashiva.vercel.app/">
-              Kaalashiva Blog
+              Kaalashiva
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
